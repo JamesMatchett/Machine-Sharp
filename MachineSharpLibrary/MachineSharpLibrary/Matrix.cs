@@ -11,23 +11,21 @@ namespace MachineSharpLibrary
         public int Rows { get; set; }
         public int Cols { get; set; }
         public double[,] Data { get; set; }
-        private Random random;
 
-        public Matrix(int rows, int cols, bool randomize = true)
+        public Matrix(int rows, int cols)
         {
             Rows = rows;
             Cols = cols;
             Data = new double[Rows, Cols];
-            random = new Random();
-            if (randomize)
-            {
-                RandomizeValues();
-            }
         }
 
-        //Randomize all values in Matrix
-        private void RandomizeValues()
+        //called when a matrix should be filled with random numbers
+        public Matrix(int rows, int cols, Random random)
         {
+            Rows = rows;
+            Cols = cols;
+            Data = new double[Rows, Cols];
+
             for (int i = 0; i < Rows; i++)
             {
                 for (int j = 0; j < Cols; j++)
@@ -36,6 +34,7 @@ namespace MachineSharpLibrary
                 }
             }
         }
+
 
         //Add a single scalar value to all values in matrix
         public void Add(double x)

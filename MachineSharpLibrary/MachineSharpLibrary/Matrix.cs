@@ -65,18 +65,27 @@ namespace MachineSharpLibrary
         /// <summary>
         /// Add element by element of matrix
         /// </summary>
+        /// <remarks>
+        /// Matrix x multiplied by Matrix y is NOT equal to Matrix y 
+        /// multiplied by Matrix x
+        /// </remarks>
         /// <param name="x">First matrix</param>
         /// <param name="y">Second matrix</param>
-        public void Add(Matrix x, Matrix y)
+        public Matrix Add(Matrix x, Matrix y)
         {
-            Matrix z= new Matrix(x.Rows, x.Cols);
+            if(x.Cols != y.Cols || x.Rows != y.Rows)
+            {
+                throw new ArgumentException("Matrix dimensions must be equal to add!");
+            }
+            Matrix z = new Matrix(x.Rows, x.Cols);
             for (int i = 0; i < Rows; i++)
             {
                 for (int j = 0; j < Cols; j++)
                 {
-                    Data[i, j] = x.Data[i, j] + y.Data[i, j];
+                    z.Data[i, j] = x.Data[i, j] + y.Data[i, j];
                 }
             }
+            return z;
         }
 
         /// <summary>
@@ -85,9 +94,9 @@ namespace MachineSharpLibrary
         /// <param name="x">Scalar value</param>
         public void Multiply(double x)
         {
-            for(int i = 0; i < Rows; i++)
+            for (int i = 0; i < Rows; i++)
             {
-                for(int j = 0; j < Cols; j++)
+                for (int j = 0; j < Cols; j++)
                 {
                     Data[i, j] *= x;
                 }
@@ -102,7 +111,7 @@ namespace MachineSharpLibrary
         /// <returns></returns>
         public static Matrix Multiply(Matrix a, Matrix b)
         {
-            if(a.Rows != b.Cols)
+            if (a.Rows != b.Cols)
             {
                 throw new ArgumentException("Rows of A must Equal Rows of B");
             }
@@ -125,16 +134,16 @@ namespace MachineSharpLibrary
 
         /// <summary>
         /// Change all rows of matrix to columns and all columns to rows
-        //and return as a new matrix
+        //  and return as a new matrix
         /// </summary>
         /// <param name="a">Input matrix</param>
         /// <returns>Matrix as a row</returns>
         public static Matrix Transpose(Matrix a)
         {
             Matrix b = new Matrix(a.Cols, a.Rows);
-            for(int i = 0; i < a.Rows; i++)
+            for (int i = 0; i < a.Rows; i++)
             {
-                for(int j = 0; j < a.Cols; j++)
+                for (int j = 0; j < a.Cols; j++)
                 {
                     b.Data[j, i] = a.Data[i, j];
                 }

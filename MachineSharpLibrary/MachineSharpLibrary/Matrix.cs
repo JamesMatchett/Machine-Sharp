@@ -11,23 +11,32 @@ namespace MachineSharpLibrary
         public int Rows { get; set; }
         public int Cols { get; set; }
         public double[,] Data { get; set; }
-        private Random random;
 
-        public Matrix(int rows, int cols, bool randomize = true)
+        /// <summary>
+        /// Create an empty matrix
+        /// </summary>
+        /// <param name="rows">Number of rows</param>
+        /// <param name="cols">Number of columns</param>
+        public Matrix(int rows, int cols)
         {
             Rows = rows;
             Cols = cols;
             Data = new double[Rows, Cols];
-            random = new Random();
-            if (randomize)
-            {
-                RandomizeValues();
-            }
         }
 
-        //Randomize all values in Matrix
-        private void RandomizeValues()
+        /// <summary>
+        /// Create a new matrix with random numbers
+        /// </summary>
+        /// <param name="rows">Number of rows</param>
+        /// <param name="cols">Number of columns</param>
+        /// <param name="random">Random to generate random numbers, when creating many 
+        /// random matricies use the same Random variable!</param>
+        public Matrix(int rows, int cols, Random random)
         {
+            Rows = rows;
+            Cols = cols;
+            Data = new double[Rows, Cols];
+
             for (int i = 0; i < Rows; i++)
             {
                 for (int j = 0; j < Cols; j++)
@@ -37,7 +46,11 @@ namespace MachineSharpLibrary
             }
         }
 
-        //Add a single scalar value to all values in matrix
+
+        /// <summary>
+        /// Add a single scalar value to all values in matrix
+        /// </summary>
+        /// <param name="x">Scalar value to be added</param>
         public void Add(double x)
         {
             for (int i = 0; i < Rows; i++)
@@ -49,7 +62,11 @@ namespace MachineSharpLibrary
             }
         }
 
-        //Add element by element of matrix
+        /// <summary>
+        /// Add element by element of matrix
+        /// </summary>
+        /// <param name="x">First matrix</param>
+        /// <param name="y">Second matrix</param>
         public void Add(Matrix x, Matrix y)
         {
             Matrix z= new Matrix(x.Rows, x.Cols);
@@ -62,7 +79,10 @@ namespace MachineSharpLibrary
             }
         }
 
-        //Multiply each item in the matrix by a scalar value
+        /// <summary>
+        /// Multiply each item in the matrix by a scalar value
+        /// </summary>
+        /// <param name="x">Scalar value</param>
         public void Multiply(double x)
         {
             for(int i = 0; i < Rows; i++)
@@ -74,7 +94,12 @@ namespace MachineSharpLibrary
             }
         }
 
-        //Dot product of Matricies
+        /// <summary>
+        /// //Dot product of Matricies
+        /// </summary>
+        /// <param name="a">First matrix</param>
+        /// <param name="b">Second matrix</param>
+        /// <returns></returns>
         public static Matrix Multiply(Matrix a, Matrix b)
         {
             if(a.Rows != b.Cols)
@@ -98,8 +123,12 @@ namespace MachineSharpLibrary
             return c;
         }
 
-        //Change all rows of matrix to columns and all columns to rows
-        //and return as new matrix
+        /// <summary>
+        /// Change all rows of matrix to columns and all columns to rows
+        //and return as a new matrix
+        /// </summary>
+        /// <param name="a">Input matrix</param>
+        /// <returns>Matrix as a row</returns>
         public static Matrix Transpose(Matrix a)
         {
             Matrix b = new Matrix(a.Cols, a.Rows);

@@ -10,6 +10,7 @@ namespace MachineSharpLibrary
     {
         public int Rows { get; set; }
         public int Cols { get; set; }
+        public double LearningRate { get; set; }
         public double[,] Data { get; set; }
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace MachineSharpLibrary
             {
                 for (int j = 0; j < Cols; j++)
                 {
-                    Data[i, j] = random.Next(0, 10);
+                    Data[i, j] = random.NextDouble();
                 }
             }
         }
@@ -86,6 +87,34 @@ namespace MachineSharpLibrary
                 }
             }
             return z;
+        }
+
+        /// <summary>
+        /// Creates a Matrix from a single dimensional double array
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns>Matrix from double array</returns>
+        public static Matrix GetFromArray(double[] array)
+        {
+            Matrix m = new Matrix(array.Length, 1);
+            for(int i = 0; i < array.Length; i++)
+            {
+                m.Data[i, 0] = array[i];
+            }
+            return m;
+        }
+
+        public static double[] ConvertToArray(Matrix matrix)
+        {
+            double[] values = new double[matrix.Cols * matrix.Rows];
+            for(int i = 1; i <= matrix.Rows; i++)
+            {
+                for (int j = 1; j <= matrix.Cols; j++)
+                {
+                    values[(i * j) - 1] = matrix.Data[i-1, j-1];
+                }
+            }
+            return values;
         }
 
         /// <summary>

@@ -1,0 +1,6 @@
+C:\Users\Jordan\Desktop\Computer Science\Projects\MachineSharp\MachineSharpLibrary\MachineSharpLibrary\bin\Debug\MachineSharpLibrary.dll
+C:\Users\Jordan\Desktop\Computer Science\Projects\MachineSharp\MachineSharpLibrary\MachineSharpLibrary\bin\Debug\MachineSharpLibrary.pdb
+C:\Users\Jordan\Desktop\Computer Science\Projects\MachineSharp\MachineSharpLibrary\MachineSharpLibrary\obj\Debug\MachineSharpLibrary.csprojResolveAssemblyReference.cache
+C:\Users\Jordan\Desktop\Computer Science\Projects\MachineSharp\MachineSharpLibrary\MachineSharpLibrary\obj\Debug\MachineSharpLibrary.csproj.CoreCompileInputs.cache
+C:\Users\Jordan\Desktop\Computer Science\Projects\MachineSharp\MachineSharpLibrary\MachineSharpLibrary\obj\Debug\MachineSharpLibrary.dll
+C:\Users\Jordan\Desktop\Computer Science\Projects\MachineSharp\MachineSharpLibrary\MachineSharpLibrary\obj\Debug\MachineSharpLibrary.pdb

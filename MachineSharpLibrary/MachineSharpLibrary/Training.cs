@@ -6,27 +6,27 @@ using System.Threading.Tasks;
 
 namespace MachineSharpLibrary
 {
-    class Training : NeuralNetwork
+    class Training
     {
         //This class inherits neural network and has the ability to correctively alter weightings and biases depending on the set
         //of expected outputs and actual outputs
 
-            /// <summary>
-            /// Constructs the Training class and through inheritance the neural net to be trained
-            /// </summary>
-            /// <param name="_Inputs"></param>
-            /// <param name="_hidden"></param>
-            /// <param name="_outputs"></param>
-        public Training(int _Inputs, int _hidden, int _outputs) : base(_Inputs, _hidden, _outputs)
+        /// <summary>
+        /// Constructs the Training class and through inheritance the neural net to be trained
+        /// </summary>
+        /// <param name="_Inputs"></param>
+        /// <param name="_hidden"></param>
+        /// <param name="_outputs"></param>
+        /// 
+
+        private NeuralNetwork neuralNetwork;
+        public Training(NeuralNetwork _NeuralNetwork)
         {
-            
+            neuralNetwork = _NeuralNetwork;
         }
 
         //Allow an already existing neural net to be trained
-        public Training(NeuralNetwork _NeuralNetwork) : base(_NeuralNetwork)
-        {
-
-        }
+        
 
         /// <summary>
         /// Trains the neural net by simulating an input and comparing the expected output with the actual output

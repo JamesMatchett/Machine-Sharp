@@ -24,16 +24,6 @@ namespace MachineSharpLibrary
             NoOfOutputs = outputs;
         }
 
-        public NeuralNetwork(NeuralNetwork _NeuralNetwork)
-        {
-            Random random = new Random();
-            ihWeights = _NeuralNetwork.ihWeights;
-            hoWeights = _NeuralNetwork.hoWeights;
-            NoOfInputs = _NeuralNetwork.NoOfInputs;
-            NoOfHidden = _NeuralNetwork.NoOfHidden;
-            NoOfOutputs = _NeuralNetwork.NoOfOutputs;
-        }
-
         /// <summary>
         /// Makes a prediction from the given inputs
         /// </summary>

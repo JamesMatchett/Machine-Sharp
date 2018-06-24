@@ -22,6 +22,24 @@ namespace MachineSharpLibrary
             
         }
 
+        /// <summary>
+        /// Trains the neural net by simulating an input and comparing the expected output with the actual output
+        /// </summary>
+        /// <param name="InputArray">The input data to to the neural net</param>
+        /// <param name="ExpectedOutput">The expected output from the neural net</param>
+        /// <returns></returns>
+        public Double Train(double[] InputArray, double[] ExpectedOutput)
+        {
+            //Run number through neural net
+            //Compare output with expected output
+            //find best weighting to adjust
+            //find direction to adjust (either up or down)
+            //recursively adjust until local mininum found
+            //apply adjustment to neural net
+        }
+
+        
+
         
 
 

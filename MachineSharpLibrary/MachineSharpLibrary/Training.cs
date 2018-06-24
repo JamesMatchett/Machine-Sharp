@@ -22,6 +22,12 @@ namespace MachineSharpLibrary
             
         }
 
+        //Allow an already existing neural net to be trained
+        public Training(NeuralNetwork _NeuralNetwork) : base(_NeuralNetwork)
+        {
+
+        }
+
         /// <summary>
         /// Trains the neural net by simulating an input and comparing the expected output with the actual output
         /// </summary>
@@ -32,9 +38,13 @@ namespace MachineSharpLibrary
         {
             //Run number through neural net
             //Compare output with expected output
+            Double[] Result = this.Predict(InputArray);
             //find best weighting to adjust
+
             //find direction to adjust (either up or down)
+
             //recursively adjust until local mininum found
+
             //apply adjustment to neural net
         }
 

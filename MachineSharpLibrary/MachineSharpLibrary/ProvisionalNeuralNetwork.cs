@@ -188,14 +188,14 @@ namespace MachineSharpLibrary
             {
                 foreach (Neuron N in InputLayer)
                 {
-                    sum += N.WeightsOut[neuronNumber] * N.Activation;
+                    sum += (N.WeightsOut[neuronNumber] * N.Activation) + N.Bias;
                 }
             }
             else
             {
                 foreach (Neuron N in HiddenLayers[layerNumber-2])
                 {
-                    sum += N.WeightsOut[neuronNumber] * N.Activation;
+                    sum += (N.WeightsOut[neuronNumber] * N.Activation) + N.Bias;
                 }
             }
 

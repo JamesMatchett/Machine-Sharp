@@ -48,7 +48,7 @@ namespace MachineSharpLibrary
             
             //now we can nudge the neuron by either changing bias, changing weighting, change activation from previous layer
             //Focus on neurons from previous layers with stronger activations as they are more relevant to this single example
-            
+            //compute this for all outputs, even if they are outputs we do not want as we can aim to reduce them to 0
             //TODO Nudge function
 
         }

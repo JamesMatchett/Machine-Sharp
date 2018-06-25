@@ -184,14 +184,7 @@ namespace MachineSharpLibrary
         {
             double sum = 0;
             //if first hidden layer, take activations & weights from input layer
-            if(layerNumber == 1)
-            {
-                foreach(Neuron N in InputLayer)
-                {
-                    sum += N.WeightsOut[neuronNumber] * N.Activation;
-                }
-            }
-            else if(layerNumber == 0)
+            if(layerNumber == 0)
             {
                 foreach (Neuron N in InputLayer)
                 {

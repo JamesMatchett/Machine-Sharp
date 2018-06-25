@@ -90,8 +90,129 @@ namespace MachineSharpLibrary
             //output layer will always have 1 output per neuron the "result"
             for(int i =0; i < NumberOfOutputs; i++)
             {
+                //1 output
                 OutputLayer.Add(new Neuron(1));
             }
+        }
+
+        public Double[] Predict(Double[] InputArray)
+        {
+            //go through each layer, start with first, then every hidden, landing on output
+            if(InputArray.Count() != InputLayer.Count())
+            {
+                throw new Exception("Invalid number of inputs");
+            }
+            else
+            {
+                //input layer
+                for(int i = 0; i < InputLayer.Count(); i++)
+                {
+                    InputLayer[i].Activation = InputArray[i];
+                }
+
+                //hidden layers
+                if(HiddenLayers.Count() > 0)
+                {
+                    int layerNumber = 1;
+
+                    //if 1 hidden layer
+                    if (HiddenLayers.Count() == 1)
+                    {
+                        
+                        int iterator = 0;
+                        foreach(Neuron N in HiddenLayers.First())
+                        {
+                            //sum & squash of all activations * weights from previous layers
+                            N.Activation = Sum(layerNumber, iterator);
+                            iterator++;
+                        }
+                    }
+                    else
+                    {
+                        //if more than 1 hidden layer
+                        foreach(List<Neuron> LN in HiddenLayers)
+                        {
+                            int iterator = 0;
+                            foreach (Neuron N in LN)
+                            {
+                                N.Activation = Sum(layerNumber, iterator);
+                                iterator++;
+                            }
+                            layerNumber++;
+                        }
+                    }
+                }
+
+                //output layers
+                //if no hidden layers
+                if(HiddenLayers.Count == 0)
+                {
+                    int iterator = 0;
+                    foreach (Neuron N in OutputLayer)
+                    {
+                        //sum & squash of all activations * weights from previous layers
+                        N.Activation = Sum(0, iterator);
+                        iterator++;
+                    }
+                }
+                else if(HiddenLayers.Count == 1)
+                {
+                    int iterator = 0;
+                    foreach (Neuron N in OutputLayer)
+                    {
+                        //sum & squash of all activations * weights from previous layers
+                        N.Activation = Sum(1, iterator);
+                        iterator++;
+                    }
+                }
+                //multiple hidden layers, take from last
+                else
+                {
+                    int iterator = 0;
+                    foreach (Neuron N in OutputLayer)
+                    {
+                        //sum & squash of all activations * weights from previous layers
+                        N.Activation = Sum(HiddenLayers.Count, iterator);
+                        iterator++;
+                    }
+                }
+            }
+        }
+
+        //input = layer 0, first hidden layer = layer 1 etc etc
+        private double Sum(int layerNumber, int neuronNumber)
+        {
+            double sum = 0;
+            //if first hidden layer, take activations & weights from input layer
+            if(layerNumber == 1)
+            {
+                foreach(Neuron N in InputLayer)
+                {
+                    sum += N.WeightsOut[neuronNumber] * N.Activation;
+                }
+            }
+            else if(layerNumber == 0)
+            {
+                foreach (Neuron N in InputLayer)
+                {
+                    sum += N.WeightsOut[neuronNumber] * N.Activation;
+                }
+            }
+            else
+            {
+                foreach (Neuron N in HiddenLayers[layerNumber-2])
+                {
+                    sum += N.WeightsOut[neuronNumber] * N.Activation;
+                }
+            }
+
+            sum = Squash(sum);
+            return sum;
+        }
+
+        private double Squash(double input)
+        {
+            return 1 / (1 + Math.Exp(-input));
         }
     }
 }

@@ -177,6 +177,15 @@ namespace MachineSharpLibrary
                     }
                 }
             }
+            double[] ReturnArray = new double[OutputLayer.Count()];
+            int OutIterator = 0;
+            foreach(Neuron D in OutputLayer)
+            {
+                ReturnArray[OutIterator] = D.Activation;
+                OutIterator++;
+            }
+            return ReturnArray;
+
         }
 
         //input = layer 0, first hidden layer = layer 1 etc etc

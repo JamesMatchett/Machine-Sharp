@@ -17,6 +17,13 @@ namespace MachineSharpLibrary
         { 
         }
 
+        /// <summary>
+        /// Create a neural network
+        /// </summary>
+        /// <param name="NumberOfHiddenLayers">How many Hidden layers to create</param>
+        /// <param name="NeuronsPerHiddenLayer">Number of neurons per hidden layer, e.g. first index = number of neurons in first layer etc etc</param>
+        /// <param name="NumberOfInputs">Number of input neurons</param>
+        /// <param name="NumberOfOutputs">Number of output neurons</param>
         public ProvisionalNeuralNetwork(int NumberOfHiddenLayers, int[] NeuronsPerHiddenLayer, int NumberOfInputs, int NumberOfOutputs)
         {
             //catch for any mismatch errors

@@ -62,9 +62,15 @@ namespace MachineSharpLibrary
         public Neuron(int NumberOfWeightsOut, Random random)
         {
             WeightsOut = new double[NumberOfWeightsOut];
-            for(int i = 0; i<NumberOfWeightsOut; i++)
+            for (int i = 0; i < NumberOfWeightsOut; i++)
             {
-                WeightsOut[i] = random.NextDouble();
+                double w = random.NextDouble();
+                int isNeg = random.Next(0, 2);
+                if (isNeg == 1)
+                {
+                    w = -w;
+                }
+                WeightsOut[i] = w;
             }
             Bias = random.Next();
         }

@@ -16,3 +16,7 @@ MachineSharpLibrary/MachineSharpLibrary/bin/Debug/MachineSharpLibrary.dll
 *.pdb
 *.dll
 *.pdb
+*.dll
+*.pdb
+MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.dll
+MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.pdb

@@ -8,7 +8,7 @@ namespace MachineSharpLibrary
 {
     class Neuron
     {
-        //first index = weight from neuron to first neuron in next layer
+       //first index = weight from neuron to first neuron in next layer
        public double[] WeightsOut { get; set; }
        public double Bias { get; set; }
        public double Activation = 0;
@@ -19,7 +19,7 @@ namespace MachineSharpLibrary
         /// <param name="NumberOfLayersOut"></param>
         public Neuron(int NumberOfLayersOut)
         {
-            WeightsOut = new Double[NumberOfLayersOut - 1];
+            WeightsOut = new Double[NumberOfLayersOut];
             for(int i = 0; i < NumberOfLayersOut; i++)
             {
                 WeightsOut[i] = 0;

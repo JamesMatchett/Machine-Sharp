@@ -11,3 +11,6 @@ MachineSharpLibrary/MachineSharpLibrary/obj/Debug/TemporaryGeneratedFile_E7A71F7
 MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.csproj.FileListAbsolute.txt
 MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.dll
 MachineSharpLibrary/MachineSharpLibrary/test.cs
+*.dll
+MachineSharpLibrary/MachineSharpLibrary/bin/Debug/MachineSharpLibrary.dll
+*.pdb

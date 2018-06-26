@@ -33,11 +33,21 @@ namespace MachineSharpLibrary
                 throw new Exception("Difference between number of hidden layers and neurons supplied for each layer");
             }
 
+            FillInputLayer(NumberOfInputs, NeuronsPerHiddenLayer, NumberOfOutputs);
+
+            FillHiddenLayers(NumberOfHiddenLayers, NeuronsPerHiddenLayer, NumberOfOutputs);
+
+            FillOutputLayer(NumberOfOutputs);
+
+        }
+
+        private void FillInputLayer(int NumberOfInputs, int[] NeuronsPerHiddenLayer, int NumberOfOutputs)
+        {
             //fill input layer with neurons
-            for(int i = 0; i < NumberOfInputs; i++)
+            for (int i = 0; i < NumberOfInputs; i++)
             {
                 //if hidden layer exists, number of outputs for each neuron in input layer = number of neurons in first hidden layer
-                if(NeuronsPerHiddenLayer.Count() > 0)
+                if (NeuronsPerHiddenLayer.Count() > 0)
                 {
                     InputLayer.Add(new Neuron(NeuronsPerHiddenLayer[0]));
                 }
@@ -47,16 +57,18 @@ namespace MachineSharpLibrary
                     InputLayer.Add(new Neuron(NumberOfOutputs));
                 }
             }
+        }
 
-
+        private void FillHiddenLayers(int NumberOfHiddenLayers, int[] NeuronsPerHiddenLayer, int NumberOfOutputs)
+        {
             //fill hidden layer(s) with neurons if any exist
             if (NumberOfHiddenLayers > 0)
             {
                 //if only 1 hidden layer then number of outputs from hidden layer = number of neurons in final output layer
-                if(NumberOfHiddenLayers == 1)
+                if (NumberOfHiddenLayers == 1)
                 {
                     List<Neuron> FirstHiddenLayer = new List<Neuron>();
-                    for(int i = 0; i<NeuronsPerHiddenLayer[0]; i++)
+                    for (int i = 0; i < NeuronsPerHiddenLayer[0]; i++)
                     {
                         FirstHiddenLayer.Add(new Neuron(NumberOfOutputs));
                     }
@@ -66,29 +78,30 @@ namespace MachineSharpLibrary
                 {
                     //more than 1 hidden layer, succesive number of outputs = number of neurons for next layer
                     int LayerCount = 0;
-                    for(LayerCount = 0; LayerCount < NumberOfHiddenLayers -1 ; LayerCount++)
+                    for (LayerCount = 0; LayerCount < NumberOfHiddenLayers - 1; LayerCount++)
                     {
                         List<Neuron> NextLayer = new List<Neuron>();
-                        for(int i =0; i<NeuronsPerHiddenLayer[LayerCount]; i++)
+                        for (int i = 0; i < NeuronsPerHiddenLayer[LayerCount]; i++)
                         {
-                            NextLayer.Add(new Neuron(NeuronsPerHiddenLayer[i + 1]));
+                            NextLayer.Add(new Neuron(NeuronsPerHiddenLayer[LayerCount + 1]));
                         }
                         HiddenLayers.Add(NextLayer);
                     }
 
                     //for last layer, number of outputs from hidden layer = number of neurons in final output layer
                     List<Neuron> FinalHiddenLayer = new List<Neuron>();
-                    for (int i = 0; i < NeuronsPerHiddenLayer[NumberOfHiddenLayers-1]; i++)
+                    for (int i = 0; i < NeuronsPerHiddenLayer[NumberOfHiddenLayers - 1]; i++)
                     {
                         FinalHiddenLayer.Add(new Neuron(NumberOfOutputs));
                     }
                     HiddenLayers.Add(FinalHiddenLayer);
                 }
             }
+        }
 
-            //fill output layer with neurons
-            //output layer will always have 1 output per neuron the "result"
-            for(int i =0; i < NumberOfOutputs; i++)
+        private void FillOutputLayer(int NumberOfOutputs)
+        {
+            for (int i = 0; i < NumberOfOutputs; i++)
             {
                 //1 output
                 OutputLayer.Add(new Neuron(1));

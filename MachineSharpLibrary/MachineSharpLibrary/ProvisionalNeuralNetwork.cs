@@ -265,7 +265,7 @@ namespace MachineSharpLibrary
                     foreach (Neuron N in OutputLayer)
                     {
                         //sum & squash of all activations * weights from previous layers
-                        N.Activation = Sum(HiddenLayers.Count, iterator);
+                        N.Activation = Sum(HiddenLayers.Count-1, iterator);
                         iterator++;
                     }
                 }

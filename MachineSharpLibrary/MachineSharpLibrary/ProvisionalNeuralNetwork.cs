@@ -244,7 +244,7 @@ namespace MachineSharpLibrary
                     foreach (Neuron N in OutputLayer)
                     {
                         //sum & squash of all activations * weights from previous layers
-                        N.Activation = Sum(0, iterator);
+                        N.Activation = Sum(1, iterator);
                         iterator++;
                     }
                 }
@@ -265,7 +265,7 @@ namespace MachineSharpLibrary
                     foreach (Neuron N in OutputLayer)
                     {
                         //sum & squash of all activations * weights from previous layers
-                        N.Activation = Sum(HiddenLayers.Count-1, iterator);
+                        N.Activation = Sum(HiddenLayers.Count, iterator);
                         iterator++;
                     }
                 }
@@ -282,6 +282,7 @@ namespace MachineSharpLibrary
         }
 
         //input = layer 0, first hidden layer = layer 1 etc etc
+        //layernumber = layer program is currently in
         private double Sum(int layerNumber, int neuronNumber)
         {
             double sum = 0;
@@ -307,7 +308,7 @@ namespace MachineSharpLibrary
 
         private double Squash(double input)
         {
-            return 1 / (1 + Math.Exp(-input));
+            return (1 / (1 + Math.Exp(-input)));
         }
     }
 }

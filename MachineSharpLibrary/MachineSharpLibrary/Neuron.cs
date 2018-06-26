@@ -61,6 +61,7 @@ namespace MachineSharpLibrary
 
         public Neuron(int NumberOfWeightsOut, Random random)
         {
+            WeightsOut = new double[NumberOfWeightsOut];
             for(int i = 0; i<NumberOfWeightsOut; i++)
             {
                 WeightsOut[i] = random.NextDouble();

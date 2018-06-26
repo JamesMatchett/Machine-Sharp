@@ -286,7 +286,7 @@ namespace MachineSharpLibrary
         {
             double sum = 0;
             //if first hidden layer, take activations & weights from input layer
-            if(layerNumber == 0)
+            if(layerNumber == 1)
             {
                 foreach (Neuron N in InputLayer)
                 {

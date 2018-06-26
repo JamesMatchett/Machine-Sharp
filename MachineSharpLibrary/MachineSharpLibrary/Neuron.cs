@@ -58,5 +58,14 @@ namespace MachineSharpLibrary
             WeightsOut = PresetWeightsOut;
             Bias = _Bias;
         }
+
+        public Neuron(int NumberOfWeightsOut, Random random)
+        {
+            for(int i = 0; i<NumberOfWeightsOut; i++)
+            {
+                WeightsOut[i] = random.NextDouble();
+            }
+            Bias = random.Next();
+        }
     }
 }

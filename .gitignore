@@ -14,3 +14,5 @@ MachineSharpLibrary/MachineSharpLibrary/test.cs
 *.dll
 MachineSharpLibrary/MachineSharpLibrary/bin/Debug/MachineSharpLibrary.dll
 *.pdb
+*.dll
+*.pdb

@@ -24,7 +24,7 @@ namespace MachineSharpLibrary
         /// <param name="NeuronsPerHiddenLayer">Number of neurons per hidden layer, e.g. first index = number of neurons in first layer etc etc</param>
         /// <param name="NumberOfInputs">Number of input neurons</param>
         /// <param name="NumberOfOutputs">Number of output neurons</param>
-        public ProvisionalNeuralNetwork(int NumberOfHiddenLayers, int[] NeuronsPerHiddenLayer, int NumberOfInputs, int NumberOfOutputs)
+        public ProvisionalNeuralNetwork(int NumberOfHiddenLayers, int[] NeuronsPerHiddenLayer, int NumberOfInputs, int NumberOfOutputs, bool UseRandom)
         {
             //catch for any mismatch errors
             if(NumberOfHiddenLayers != NeuronsPerHiddenLayer.Count())
@@ -33,11 +33,24 @@ namespace MachineSharpLibrary
                 throw new Exception("Difference between number of hidden layers and neurons supplied for each layer");
             }
 
-            FillInputLayer(NumberOfInputs, NeuronsPerHiddenLayer, NumberOfOutputs);
+            if (!UseRandom)
+            {
+                FillInputLayer(NumberOfInputs, NeuronsPerHiddenLayer, NumberOfOutputs);
 
-            FillHiddenLayers(NumberOfHiddenLayers, NeuronsPerHiddenLayer, NumberOfOutputs);
+                FillHiddenLayers(NumberOfHiddenLayers, NeuronsPerHiddenLayer, NumberOfOutputs);
 
-            FillOutputLayer(NumberOfOutputs);
+                FillOutputLayer(NumberOfOutputs);
+            }
+            else
+            {
+                Random rand = new Random();
+
+                FillRandInputLayer(NumberOfInputs, NeuronsPerHiddenLayer, NumberOfOutputs, rand);
+
+                FillRandHiddenLayers(NumberOfHiddenLayers, NeuronsPerHiddenLayer, NumberOfOutputs, rand);
+
+                FillRandOutputLayer(NumberOfOutputs);
+            }
 
         }
 
@@ -100,6 +113,73 @@ namespace MachineSharpLibrary
         }
 
         private void FillOutputLayer(int NumberOfOutputs)
+        {
+            for (int i = 0; i < NumberOfOutputs; i++)
+            {
+                //1 output
+                OutputLayer.Add(new Neuron(1));
+            }
+        }
+
+        private void FillRandInputLayer(int NumberOfInputs, int[] NeuronsPerHiddenLayer, int NumberOfOutputs, Random rand)
+        {
+            //fill input layer with neurons
+            for (int i = 0; i < NumberOfInputs; i++)
+            {
+                //if hidden layer exists, number of outputs for each neuron in input layer = number of neurons in first hidden layer
+                if (NeuronsPerHiddenLayer.Count() > 0)
+                {
+                    InputLayer.Add(new Neuron(NeuronsPerHiddenLayer[0],rand));
+                }
+                else
+                {
+                    //if no hidden layers exist then number of outputs for each neuron in input layer = number of neurons in the output layer
+                    InputLayer.Add(new Neuron(NumberOfOutputs,rand));
+                }
+            }
+        }
+
+        private void FillRandHiddenLayers(int NumberOfHiddenLayers, int[] NeuronsPerHiddenLayer, int NumberOfOutputs, Random rand)
+        {
+            //fill hidden layer(s) with neurons if any exist
+            if (NumberOfHiddenLayers > 0)
+            {
+                //if only 1 hidden layer then number of outputs from hidden layer = number of neurons in final output layer
+                if (NumberOfHiddenLayers == 1)
+                {
+                    List<Neuron> FirstHiddenLayer = new List<Neuron>();
+                    for (int i = 0; i < NeuronsPerHiddenLayer[0]; i++)
+                    {
+                        FirstHiddenLayer.Add(new Neuron(NumberOfOutputs, rand));
+                    }
+                    HiddenLayers.Add(FirstHiddenLayer);
+                }
+                else
+                {
+                    //more than 1 hidden layer, succesive number of outputs = number of neurons for next layer
+                    int LayerCount = 0;
+                    for (LayerCount = 0; LayerCount < NumberOfHiddenLayers - 1; LayerCount++)
+                    {
+                        List<Neuron> NextLayer = new List<Neuron>();
+                        for (int i = 0; i < NeuronsPerHiddenLayer[LayerCount]; i++)
+                        {
+                            NextLayer.Add(new Neuron(NeuronsPerHiddenLayer[LayerCount + 1], rand));
+                        }
+                        HiddenLayers.Add(NextLayer);
+                    }
+
+                    //for last layer, number of outputs from hidden layer = number of neurons in final output layer
+                    List<Neuron> FinalHiddenLayer = new List<Neuron>();
+                    for (int i = 0; i < NeuronsPerHiddenLayer[NumberOfHiddenLayers - 1]; i++)
+                    {
+                        FinalHiddenLayer.Add(new Neuron(NumberOfOutputs, rand));
+                    }
+                    HiddenLayers.Add(FinalHiddenLayer);
+                }
+            }
+        }
+
+        private void FillRandOutputLayer(int NumberOfOutputs)
         {
             for (int i = 0; i < NumberOfOutputs; i++)
             {

@@ -46,7 +46,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProvisionalNeuralNetwork.cs" />
     <Compile Include="TestProvisional.cs" />
-    <Compile Include="Training.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

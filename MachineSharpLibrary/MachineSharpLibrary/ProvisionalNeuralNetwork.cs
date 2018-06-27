@@ -24,6 +24,7 @@ namespace MachineSharpLibrary
         /// <param name="NeuronsPerHiddenLayer">Number of neurons per hidden layer, e.g. first index = number of neurons in first layer etc etc</param>
         /// <param name="NumberOfInputs">Number of input neurons</param>
         /// <param name="NumberOfOutputs">Number of output neurons</param>
+        /// <param name="UseRandom">Whether or not to fill the weights for each neuron as random values or as 0</param>
         public ProvisionalNeuralNetwork(int NumberOfHiddenLayers, int[] NeuronsPerHiddenLayer, int NumberOfInputs, int NumberOfOutputs, bool UseRandom)
         {
             //catch for any mismatch errors
@@ -116,8 +117,8 @@ namespace MachineSharpLibrary
         {
             for (int i = 0; i < NumberOfOutputs; i++)
             {
-                //1 output
-                OutputLayer.Add(new Neuron(1));
+                //put as 0 as no connections going forward
+                OutputLayer.Add(new Neuron(0));
             }
         }
 
@@ -183,8 +184,8 @@ namespace MachineSharpLibrary
         {
             for (int i = 0; i < NumberOfOutputs; i++)
             {
-                //1 output
-                OutputLayer.Add(new Neuron(1));
+                //put as 0 as no connections going forward
+                OutputLayer.Add(new Neuron(0));
             }
         }
 
@@ -193,7 +194,8 @@ namespace MachineSharpLibrary
             //go through each layer, start with first, then every hidden, landing on output
             if(InputArray.Count() != InputLayer.Count())
             {
-                throw new Exception("Invalid number of inputs");
+                string excp = "Invalid number of inputs, expected " + InputLayer.Count() + " inputs but got " + InputArray.Count();
+                throw new Exception(excp);
             }
             else
             {
@@ -206,35 +208,18 @@ namespace MachineSharpLibrary
                 //hidden layers
                 if(HiddenLayers.Count() > 0)
                 {
-                    int layerNumber = 1;
-
-                    //if 1 hidden layer
-                    if (HiddenLayers.Count() == 1)
-                    {
-                        
-                        int iterator = 0;
-                        foreach(Neuron N in HiddenLayers.First())
-                        {
-                            //sum & squash of all activations * weights from previous layers
-                            N.Activation = Sum(layerNumber, iterator);
-                            iterator++;
-                        }
-                    }
-                    else
-                    {
-                        //if more than 1 hidden layer
+                        int layerNumber = 1;
                         foreach(List<Neuron> LN in HiddenLayers)
                         {
                             int iterator = 0;
                             foreach (Neuron N in LN)
                             {
-                                var x = 2;
                                 N.Activation = Sum(layerNumber, iterator);
                                 iterator++;
                             }
                             layerNumber++;
                         }
-                    }
+                 
                 }
 
                 //output layers
@@ -246,16 +231,6 @@ namespace MachineSharpLibrary
                     {
                         //sum & squash of all activations * weights from previous layers
                         N.Activation = Sum(1, iterator);
-                        iterator++;
-                    }
-                }
-                else if(HiddenLayers.Count == 1)
-                {
-                    int iterator = 0;
-                    foreach (Neuron N in OutputLayer)
-                    {
-                        //sum & squash of all activations * weights from previous layers
-                        N.Activation = Sum(2, iterator);
                         iterator++;
                     }
                 }

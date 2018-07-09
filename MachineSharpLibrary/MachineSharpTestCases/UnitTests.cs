@@ -531,6 +531,7 @@ namespace MachineSharpTestCases
                         if ((indexer != RandToRemove) || BreakDiscovered)
                         {
                             Assert.AreEqual(D, LMM.Net[IndexOfLast - 1][Neuron].WeightsOut[indexer]);
+                            
                             indexer++;
                         }
                         else
@@ -548,8 +549,38 @@ namespace MachineSharpTestCases
         public class AddRemoveLayers
         {
             //Add Layer
+            [TestMethod]
+            public void AddLayer()
+            {
+                var LMM = Helper.GetTrueNeuralNet();
+                //insert a layer at positon 1, will become first hidden layer
+                int InitialLayers = LMM.Net.Count;
+                LMM.AddLayer(1, 5);
+
+                //check layer has been successfully added
+                Assert.AreEqual(LMM.Net.Count, InitialLayers + 1);
+
+                //check each neuron in new layer has correct number of weights out
+                foreach(Neuron N in LMM.Net[1])
+                {
+                    Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[2].Count);
+                }
+
+                //check each neuron in the previous layer has the correct number of weights out to the new layer
+                foreach (Neuron N in LMM.Net[0])
+                {
+                    Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[1].Count);
+                }
+            }
+
 
             //Remove layer
+            [TestMethod]
+            public void RemoveLayer()
+            {
+
+            }
+            
 
         }
     }

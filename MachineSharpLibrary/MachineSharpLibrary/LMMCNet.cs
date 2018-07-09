@@ -215,6 +215,40 @@ namespace MachineSharpLibrary
        /// <param name="NeuronsInNewLayer">How many neurons the new layer should occupy</param>
         public void AddLayer(int LayerNumber, int NeuronsInNewLayer)
         {
+            //Checklist
+            //Excpetions, LayerNumber above 0 and less than output D
+            //Exceptions, Neurons more than 0 D
+            //Make List<Neuron> D
+            //Add it to Net D
+            //Rebuild connections from layer previous D
+            //Make connections to next layer D (as part of MakeLayer)
+
+            if(LayerNumber < 1 || LayerNumber >= Net.Count - 1)
+            {
+                throw new InvalidOperationException("Layer number has to be larger than 0 and less than the index of the output layer which" +
+                    " will be incrimented when a layer is successfully added");
+            }
+
+            if(NeuronsInNewLayer <= 0)
+            {
+                throw new InvalidOperationException("New layer must have more than 0 neurons");
+            }
+
+            List<Neuron> newLayer = MakeLayer(NeuronsInNewLayer, Net[LayerNumber].Count, true);
+
+            Net.Insert(LayerNumber, newLayer);
+
+            int NeuronNo = 0;
+            foreach(Neuron N in Net[LayerNumber - 1])
+            {
+                N.WeightsOut = new double[Net[LayerNumber].Count()];
+                while(N.WeightsOut.GetUpperBound(0)+1 != Net[LayerNumber].Count())
+                {
+                    BackAdjustWeights(LayerNumber - 1, NeuronNo);
+                }
+                NeuronNo++;
+            }
+
 
         }
 

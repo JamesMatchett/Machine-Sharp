@@ -394,20 +394,163 @@ namespace MachineSharpTestCases
             [TestMethod]
             public void RemoveNeuronFromMiddleHidden()
             {
-               
+                var LMM = Helper.GetTrueNeuralNet();
+                int RandToRemove = Helper.GetRandomToRemove(LMM, 2);
+                int NumberOfInitialNeurons = LMM.Net[2].Count;
+
+                List<double[]> WeightsOutBefore = new List<double[]>();
+                foreach (Neuron N in LMM.Net[1])
+                {
+                    WeightsOutBefore.Add(N.WeightsOut);
+                }
+                LMM.RemoveNeuron(2, RandToRemove);
+
+                //Make sure Neuron is removed successfully
+                Assert.AreEqual(LMM.Net[2].Count, NumberOfInitialNeurons - 1);
+
+                //check Weights out for each neuron in the previous layer have been correctly adjusted
+                foreach (Neuron N in LMM.Net[1])
+                {
+                    Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[2].Count);
+                }
+
+                //check weights still line up e.g. Wout[0] => 0 etc etc
+                int indexer = 0;
+                int Neuron = 0;
+                bool BreakDiscovered = false;
+                foreach (double[] DD in WeightsOutBefore)
+                {
+                    BreakDiscovered = false;
+                    foreach (double D in DD)
+                    {
+                        //simply skip comparison if index == one we removed, allows on second loop, index falls relatively 1 back
+                        //compared to initial array, compare as normal
+                        if ((indexer != RandToRemove) || BreakDiscovered)
+                        {
+                            Assert.AreEqual(D, LMM.Net[1][Neuron].WeightsOut[indexer]);
+                            indexer++;
+                        }
+                        else
+                        {
+                            BreakDiscovered = true;
+                        }
+                    }
+                    indexer = 0;
+                    Neuron++;
+                }
             }
 
             [TestMethod]
             public void RemoveNeuronFromLastHidden()
             {
-                
+                var LMM = Helper.GetTrueNeuralNet();
+                var IndexOfLast = LMM.Net.Count - 2;
+                int RandToRemove = Helper.GetRandomToRemove(LMM, IndexOfLast);
+                int NumberOfInitialNeurons = LMM.Net[IndexOfLast].Count;
+
+                List<double[]> WeightsOutBefore = new List<double[]>();
+                foreach (Neuron N in LMM.Net[IndexOfLast-1])
+                {
+                    WeightsOutBefore.Add(N.WeightsOut);
+                }
+                LMM.RemoveNeuron(IndexOfLast, RandToRemove);
+
+                //Make sure Neuron is removed successfully
+                Assert.AreEqual(LMM.Net[IndexOfLast].Count, NumberOfInitialNeurons - 1);
+
+                //check Weights out for each neuron in the previous layer have been correctly adjusted
+                foreach (Neuron N in LMM.Net[IndexOfLast-1])
+                {
+                    Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[IndexOfLast].Count);
+                }
+
+                //check weights still line up e.g. Wout[0] => 0 etc etc
+                int indexer = 0;
+                int Neuron = 0;
+                bool BreakDiscovered = false;
+                foreach (double[] DD in WeightsOutBefore)
+                {
+                    BreakDiscovered = false;
+                    foreach (double D in DD)
+                    {
+                        //simply skip comparison if index == one we removed, allows on second loop, index falls relatively 1 back
+                        //compared to initial array, compare as normal
+                        if ((indexer != RandToRemove) || BreakDiscovered)
+                        {
+                            Assert.AreEqual(D, LMM.Net[IndexOfLast-1][Neuron].WeightsOut[indexer]);
+                            indexer++;
+                        }
+                        else
+                        {
+                            BreakDiscovered = true;
+                        }
+                    }
+                    indexer = 0;
+                    Neuron++;
+                }
             }
 
             [TestMethod]
             public void RemoveNeuronFromOutput()
             {
+                var LMM = Helper.GetTrueNeuralNet();
+                var IndexOfLast = LMM.Net.Count - 1;
+                int RandToRemove = Helper.GetRandomToRemove(LMM, IndexOfLast);
+                int NumberOfInitialNeurons = LMM.Net[IndexOfLast].Count;
 
+                List<double[]> WeightsOutBefore = new List<double[]>();
+                foreach (Neuron N in LMM.Net[IndexOfLast - 1])
+                {
+                    WeightsOutBefore.Add(N.WeightsOut);
+                }
+                LMM.RemoveNeuron(IndexOfLast, RandToRemove);
+
+                //Assert number of outputs interally altered correctly
+                Assert.AreEqual(LMM.NumberOfOutputs, LMM.Net[IndexOfLast].Count);
+
+                //Make sure Neuron is removed successfully
+                Assert.AreEqual(LMM.Net[IndexOfLast].Count, NumberOfInitialNeurons - 1);
+
+                //check Weights out for each neuron in the previous layer have been correctly adjusted
+                foreach (Neuron N in LMM.Net[IndexOfLast - 1])
+                {
+                    Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[IndexOfLast].Count);
+                }
+
+                //check weights still line up e.g. Wout[0] => 0 etc etc
+                int indexer = 0;
+                int Neuron = 0;
+                bool BreakDiscovered = false;
+                foreach (double[] DD in WeightsOutBefore)
+                {
+                    BreakDiscovered = false;
+                    foreach (double D in DD)
+                    {
+                        //simply skip comparison if index == one we removed, allows on second loop, index falls relatively 1 back
+                        //compared to initial array, compare as normal
+                        if ((indexer != RandToRemove) || BreakDiscovered)
+                        {
+                            Assert.AreEqual(D, LMM.Net[IndexOfLast - 1][Neuron].WeightsOut[indexer]);
+                            indexer++;
+                        }
+                        else
+                        {
+                            BreakDiscovered = true;
+                        }
+                    }
+                    indexer = 0;
+                    Neuron++;
+                }
             }
+        }
+
+        [TestClass]
+        public class AddRemoveLayers
+        {
+            //Add Layer
+
+            //Remove layer
+
         }
     }
 

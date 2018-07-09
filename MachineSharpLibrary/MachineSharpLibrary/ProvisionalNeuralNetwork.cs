@@ -6,17 +6,14 @@ using System.Threading.Tasks;
 
 namespace MachineSharpLibrary
 {
-    class ProvisionalNeuralNetwork
+   public class ProvisionalNeuralNetwork
     {
-        List<Neuron> InputLayer = new List<Neuron>();
-        List<Neuron> OutputLayer = new List<Neuron>();
-        List<List<Neuron>> HiddenLayers = new List<List<Neuron>>();
+       //leave public for test classes, then make secondary private class for execution purposes
+       public List<Neuron> InputLayer = new List<Neuron>();
+       public List<Neuron> OutputLayer = new List<Neuron>();
+       public List<List<Neuron>> HiddenLayers = new List<List<Neuron>>();
 
-        //parameterless constructor to stop the compiler from complaining
-        public ProvisionalNeuralNetwork()
-        { 
-        }
-
+       
         /// <summary>
         /// Create a neural network
         /// </summary>

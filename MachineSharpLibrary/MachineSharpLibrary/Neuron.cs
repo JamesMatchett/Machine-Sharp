@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MachineSharpLibrary
 {
-    class Neuron
+    public class Neuron
     {
        //first index = weight from neuron to first neuron in next layer
        public double[] WeightsOut { get; set; }
@@ -72,7 +72,7 @@ namespace MachineSharpLibrary
                 }
                 WeightsOut[i] = w;
             }
-            Bias = random.Next();
+            Bias = random.NextDouble();
         }
     }
 }

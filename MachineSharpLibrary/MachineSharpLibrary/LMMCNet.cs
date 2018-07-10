@@ -258,7 +258,28 @@ namespace MachineSharpLibrary
         /// <param name="LayerNumber">Which layer to remove, cannot be 0 or the same as the output layer</param>
         public void RemoveLayer(int LayerNumber)
         {
+            //Checklist
+            //Exception, layer number less than 1 or greater than output-1 D 
+            //Remove layer D 
+            //set weights out from layer before to match neurons in layer after
 
+            if(LayerNumber < 1 || LayerNumber >= Net.Count - 1)
+            {
+                throw new InvalidOperationException("Layer cannot be smaller than 1 or the same as or larger than the output index");
+            }
+
+            Net.RemoveAt(LayerNumber);
+
+            int NeuronNo = 0;
+            foreach(Neuron N in Net[LayerNumber - 1])
+            {
+                N.WeightsOut = new double[Net[LayerNumber].Count];
+                while(N.WeightsOut.GetUpperBound(0)+1 != Net[LayerNumber].Count)
+                {
+                    BackAdjustWeights(LayerNumber - 1, NeuronNo);
+                }
+                NeuronNo++;
+            }
         }
 
        

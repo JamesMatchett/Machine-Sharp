@@ -571,6 +571,10 @@ namespace MachineSharpTestCases
                 {
                     Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[1].Count);
                 }
+
+                //make sure outputs still work
+               var outputs = LMM.Predict(Helper.GetInputs(LMM.NumberOfInputs));
+                Assert.AreEqual(outputs.GetUpperBound(0) + 1, LMM.NumberOfOutputs);
             }
 
 
@@ -578,7 +582,23 @@ namespace MachineSharpTestCases
             [TestMethod]
             public void RemoveLayer()
             {
+                var LMM = Helper.GetTrueNeuralNet();
+                var InitialLayers = LMM.Net.Count;
+                //remove layer at position 1
+                LMM.RemoveLayer(1);
 
+                //check layer has been successfully removed
+                Assert.AreEqual(InitialLayers - 1, LMM.Net.Count);
+
+                //check each neuron in the layer before has correct weights out e.g. now 0 => 1
+                foreach(Neuron N in LMM.Net[0])
+                {
+                    Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[1].Count);
+                }
+
+                //make sure outputs still work
+                var outputs = LMM.Predict(Helper.GetInputs(LMM.NumberOfInputs));
+                Assert.AreEqual(outputs.GetUpperBound(0) + 1, LMM.NumberOfOutputs);
             }
             
 

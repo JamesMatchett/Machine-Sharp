@@ -103,7 +103,6 @@ namespace MachineSharpLibrary
                     {
                         sum += ((N.Activation * N.WeightsOut[Neuron]) + N.Bias);
                     }
-                    Console.WriteLine("Sum is {0}",sum);
                     Net[LayerNumber][Neuron].Activation = Squish(sum);
                 }
             }
@@ -280,6 +279,55 @@ namespace MachineSharpLibrary
                 }
                 NeuronNo++;
             }
+        }
+
+        public void Train(double [] Inputs, double[] ExpectedOutputs)
+        {
+
+            //exception for invalid no of inputs or expected outputs
+            var Actualoutput = Predict(Inputs);
+
+            //initial Cost function
+            var InitialCost = Cost(Actualoutput, ExpectedOutputs);
+            
+            //find most effecient nudge for everything in the previous layer
+            foreach(Neuron N in Net[Net.Count - 2])
+            {
+               
+                for(int index = 0; index <= N.WeightsOut.GetUpperBound(0); index++)
+                {
+                    N.WeightsOut[index] += 0.1;
+                    if(InitialCost >= Cost(Predict(Inputs), ExpectedOutputs))
+                    {
+                        N.WeightsOut[index] += Math.Pow(0.1, (InitialCost - Cost(Actualoutput, ExpectedOutputs)));
+                    }
+                    else
+                    {
+                        N.WeightsOut[index] += -0.2;
+                        if (InitialCost >= Cost(Predict(Inputs), ExpectedOutputs))
+                        {
+                            N.WeightsOut[index] += Math.Pow(-0.1, (InitialCost - Cost(Actualoutput, ExpectedOutputs)));
+                        }
+                        else
+                        {
+                            N.WeightsOut[index] += 0.1;
+                        }
+                    }
+                }
+            }
+           
+        }
+
+        private double Cost(double[] ActualOutput, double[] ExpectedOutput)
+        {
+            double cost = 0;
+            //return the square of the differences
+            for(int i =0; i<=ActualOutput.GetUpperBound(0); i++)
+            {
+                double difference = (ActualOutput[i] - ExpectedOutput[i]);
+                cost += (difference * difference);
+            }
+            return cost;
         }
 
        

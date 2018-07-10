@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MachineSharpLibrary;
+using System.Net;
+using System.IO;
 
 namespace Execute
 {
@@ -11,20 +13,58 @@ namespace Execute
     {
         static void Main(string[] args)
         {
+            List<Mnist> TrainingList= new List<Mnist>();
+
+            StreamReader sw = new StreamReader(@"E:\Music\training.txt");
+            
+            int index = 0;
+            string label = "";
+            double[] arr = new double[28 * 28];
+            while (!sw.EndOfStream)
+            {
+                if (index == 0)
+                {
+                    int tempint = (char)sw.Read() - 48;
+                    label = tempint.ToString();
+                    index++;
+                }
+                else
+                {
+                    arr[index - 1] = (char)sw.Read()-48;
+                    index++;
+                }
+
+                if(index == 28 * 28)
+                {
+                    index = 0;
+                    Mnist mn = new Mnist(arr, label);
+                    TrainingList.Add(mn);
+                    arr = new double[28 * 28];
+                    label = "";
+                }
+            }
+
+
+            Console.ReadLine();
+            
             var LMM = new LMMCNet(5, 2, new int[] { 5, 5 }, 5, true);
 
-            foreach(double d in LMM.Net[0][0].WeightsOut)
-            {
-                Console.WriteLine(d);
-            }
-            LMM.RemoveNeuron(1,LMM.Net[1].Count-1);
-            Console.WriteLine("----------");
-            foreach (double d in LMM.Net[0][0].WeightsOut)
-            {
-                Console.WriteLine(d);
-            }
-            Console.WriteLine("Added");
+            LMM.Train(Helper.GetInputs(LMM.NumberOfInputs), Helper.GetInputs(LMM.NumberOfOutputs));
+
+
             Console.ReadLine();
+        }
+
+        public class Mnist
+        {
+            double[] Data { get; set; }
+            string Label { get; set; }
+           
+            public Mnist(double[] data, string label)
+            {
+                Data = data;
+                Label = label;
+            }
         }
 
         public class Helper

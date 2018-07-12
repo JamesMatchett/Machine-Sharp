@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MachineSharpLibrary;
 using System.Net;
 using System.IO;
+using System.Drawing;
 
 namespace Execute
 {
@@ -13,43 +14,165 @@ namespace Execute
     {
         static void Main(string[] args)
         {
-            List<Mnist> TrainingList= new List<Mnist>();
 
+            Console.WriteLine("Parsing data -------------------");
+            List<Mnist> TrainingList= new List<Mnist>();
             StreamReader sw = new StreamReader(@"E:\Music\training.txt");
-            
-            int index = 0;
-            string label = "";
-            double[] arr = new double[28 * 28];
+
+            List<string> charstr = new List<string>();
+            string build = "";
+            int index = -1;
+            int label = 0;
+            double[] data = new double[28 * 28];
             while (!sw.EndOfStream)
             {
-                if (index == 0)
+                int next = sw.Read() - 48;
+                if(next == -4)
                 {
-                    int tempint = (char)sw.Read() - 48;
-                    label = tempint.ToString();
-                    index++;
+                    if(index == -1)
+                    {
+                        label = Convert.ToInt32(build);
+                        index++;
+                    }
+                    else
+                    {
+                        data[index] = Convert.ToInt32(build);
+                        index++;
+                    }
+
+                    if(index == (28 * 28)-1)
+                    {
+                        TrainingList.Add(new Mnist(data, label));
+                        index = -1;
+                        data = new double[28 * 28];
+                        build = "";
+                        sw.Read();
+                        sw.Read();
+                    }
+
+                    build = "";
                 }
                 else
                 {
-                    arr[index - 1] = (char)sw.Read()-48;
-                    index++;
+                    //check for line breaks & spaces
+                    if (build.Contains(@"\"))
+                    {
+                        build = build.Remove(build.IndexOf(@"\"));
+                    }
+                    if (build.Contains(@"n"))
+                    {
+                        build = build.Remove(build.IndexOf(@"n"));
+                    }
+                    build += next;
                 }
 
-                if(index == 28 * 28)
-                {
-                    index = 0;
-                    Mnist mn = new Mnist(arr, label);
-                    TrainingList.Add(mn);
-                    arr = new double[28 * 28];
-                    label = "";
-                }
             }
 
 
-            Console.ReadLine();
-            
-            var LMM = new LMMCNet(5, 2, new int[] { 5, 5 }, 5, true);
+            Random random = new Random();
+            //choose random object
+            for (int i = 0; i< 50; i++)
+            {
+               
+                Mnist mn = TrainingList[random.Next(0, TrainingList.Count - 1)];
+                Bitmap bm = new Bitmap(28, 28);
 
-            LMM.Train(Helper.GetInputs(LMM.NumberOfInputs), Helper.GetInputs(LMM.NumberOfOutputs));
+                index = 0;
+                for(int x = 0; x<28; x++)
+                {
+                    for (int y = 0; y < 28; y++)
+                    {
+                        int bright = Convert.ToInt32(mn.Data[index]);
+                        bm.SetPixel(y, x, Color.FromArgb(255, bright, bright, bright));
+                        index++;
+                    }
+                }
+
+                string filename = @"E:\Music\Imagetest" + i+" "+mn.Label+".png";
+                bm.Save(filename);
+                
+            }
+
+            Console.WriteLine("Files output");
+            Console.ReadLine();
+           
+
+            int isn = 0;
+            Console.WriteLine("Checking data -------------------");
+            foreach(Mnist mn in TrainingList)
+            {
+                int value = Convert.ToInt32(mn.Label);
+                if (value > 9 || value < 0)
+                {
+                    Console.WriteLine("error at {0}",isn);
+                    
+                    Console.ReadLine();
+                }
+                isn++;
+            }
+
+            var LMM = new LMMCNet(28 * 28, 1, new int[] { 5 }, 10, false);
+
+            Console.WriteLine("Training-------------------");
+            int count = 0;
+            int total = TrainingList.Count;
+            foreach(Mnist mn in TrainingList)
+            {
+                count++;
+                Console.WriteLine("Executing {0} of {1}, cycle",count, total);
+   
+
+                var ExpectedOut = new double[10];
+                for(int i =0; i < 10; i++)
+                {
+                    if (i == Convert.ToInt32(mn.Label)){
+                        ExpectedOut[i] = 1;
+                    }
+                    else
+                    {
+                        ExpectedOut[i] = 0;
+                    }
+                }
+
+                
+                    LMM.Train(mn.Data, ExpectedOut);
+                
+            }
+
+            int totalSuccesses = 0;
+            int totalGuesses = 0;
+
+            Console.WriteLine("Guessing -----------------------");
+            foreach(Mnist mn in TrainingList)
+            {
+                totalGuesses++;
+                Console.WriteLine("On guess {0}", totalGuesses);
+                Console.WriteLine("{0} success from {1} guesses",totalSuccesses,totalGuesses);
+
+                var output = LMM.Predict(mn.Data);
+                int HighestIndex = 0;
+                double HighestValue = 0;
+                for(int i =0; i<5; i++)
+                {
+                    if (output[i] > HighestValue)
+                    {
+                        HighestIndex = i;
+                        HighestValue = output[i];
+                    }
+                }
+
+                if(HighestIndex == (mn.Label))
+                {
+                    totalSuccesses++;
+
+                    if(mn.Label != 0)
+                    {
+                        Console.WriteLine("Not a 0");
+                        Console.ReadLine();
+                    }
+                }
+
+            }
 
 
             Console.ReadLine();
@@ -57,10 +180,10 @@ namespace Execute
 
         public class Mnist
         {
-            double[] Data { get; set; }
-            string Label { get; set; }
+          public  double[] Data { get; set; }
+           public int Label { get; set; }
            
-            public Mnist(double[] data, string label)
+            public Mnist(double[] data, int label)
             {
                 Data = data;
                 Label = label;

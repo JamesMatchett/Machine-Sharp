@@ -284,36 +284,45 @@ namespace MachineSharpLibrary
         public void Train(double [] Inputs, double[] ExpectedOutputs)
         {
 
-            //exception for invalid no of inputs or expected outputs
-            var Actualoutput = Predict(Inputs);
+            var InitialCost = Cost(Predict(Inputs), ExpectedOutputs);
 
-            //initial Cost function
-            var InitialCost = Cost(Actualoutput, ExpectedOutputs);
-            
-            //find most effecient nudge for everything in the previous layer
-            foreach(Neuron N in Net[Net.Count - 2])
+            foreach (Neuron N in Net[Net.Count - 2])
             {
-               
-                for(int index = 0; index <= N.WeightsOut.GetUpperBound(0); index++)
+                var initCost = Cost(Predict(Inputs), ExpectedOutputs);
+
+                for(int i = 0; i < +N.WeightsOut.GetUpperBound(0); i++)
                 {
-                    N.WeightsOut[index] += 0.1;
-                    if(InitialCost >= Cost(Predict(Inputs), ExpectedOutputs))
+                    N.WeightsOut[i] += 0.01;
+
+                    if(initCost > Cost(Predict(Inputs), ExpectedOutputs))
                     {
-                        N.WeightsOut[index] += Math.Pow(0.1, (InitialCost - Cost(Actualoutput, ExpectedOutputs)));
+                        while(initCost > Cost(Predict(Inputs), ExpectedOutputs))
+                        {
+                            N.WeightsOut[i] += 0.001;
+                            initCost = Cost(Predict(Inputs), ExpectedOutputs);
+                            
+                            
+                        }
                     }
                     else
                     {
-                        N.WeightsOut[index] += -0.2;
-                        if (InitialCost >= Cost(Predict(Inputs), ExpectedOutputs))
-                        {
-                            N.WeightsOut[index] += Math.Pow(-0.1, (InitialCost - Cost(Actualoutput, ExpectedOutputs)));
+                        N.WeightsOut[i] -= 0.002;
+
+                        if (initCost > Cost(Predict(Inputs), ExpectedOutputs))
+                        { 
+                            while (initCost > Cost(Predict(Inputs), ExpectedOutputs))
+                            {
+                                N.WeightsOut[i] -= 0.001;
+                                initCost = Cost(Predict(Inputs), ExpectedOutputs);
+                            }
                         }
                         else
                         {
-                            N.WeightsOut[index] += 0.1;
+                            N.WeightsOut[i] += 0.001;
                         }
                     }
                 }
+
             }
            
         }
@@ -322,10 +331,10 @@ namespace MachineSharpLibrary
         {
             double cost = 0;
             //return the square of the differences
-            for(int i =0; i<=ActualOutput.GetUpperBound(0); i++)
+            for (int i = 0; i <= ActualOutput.GetUpperBound(0); i++)
             {
                 double difference = (ActualOutput[i] - ExpectedOutput[i]);
-                cost += (difference * difference);
+                cost += Math.Pow(difference, 2);
             }
             return cost;
         }

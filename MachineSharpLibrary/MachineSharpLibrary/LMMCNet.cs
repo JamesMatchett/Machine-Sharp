@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MachineSharpLibrary
 {
-   public class LMMCNet
+   public class LMMCNet : INetBase
     {
         public List<List<Neuron>> Net { get; private set; }
         public int NumberOfInputs { get; private set; }
@@ -73,7 +73,7 @@ namespace MachineSharpLibrary
         }
 
 
-        public double[] Predict (double[] Inputs)
+        public override double[] Predict (double[] Inputs)
         {
             //check valid input count
             Exception_Predict(Inputs.Count(), this.NumberOfInputs);
@@ -92,7 +92,7 @@ namespace MachineSharpLibrary
                     {
                         sum += ((N.OutValue * N.WeightsOut[Neuron]) + N.Bias);
                     }
-                    Net[LayerNumber][Neuron].OutValue = Sigmoid(sum);
+                    Net[LayerNumber][Neuron].OutValue = Activation(sum,Activations.Sigmoid);
                 }
             }
 
@@ -245,7 +245,7 @@ namespace MachineSharpLibrary
             }
         }
 
-        public void Train(double[] Inputs, double[] ExpectedOutputs)
+        public override void Train(double[] Inputs, double[] ExpectedOutputs)
         {
 
             //Check input number of elements correct
@@ -313,7 +313,7 @@ namespace MachineSharpLibrary
             }
         }
 
-        private double Cost(double[] ActualOutput, double[] ExpectedOutput)
+        protected override double Cost(double[] ActualOutput, double[] ExpectedOutput)
         {
             double cost = 0;
             //return the square of the differences
@@ -326,13 +326,20 @@ namespace MachineSharpLibrary
 
 
         //Activation function?
+        protected override double Activation(double ValueIn, Activations activations)
+        {
+            switch (activations)
+            {
+                case (Activations.Sigmoid):
+                    return (1 / (1 + Math.Exp(-ValueIn)));
+
+                default:
+                    return (1 / (1 + Math.Exp(-ValueIn)));
+            }
+        }
         
 
-        private double Sigmoid(double input)
-        {
-            return (1 / (1 + Math.Exp(-input)));
-        }
-
+      
         private void BackAdjustWeights(int LayerToBeAdjusted, int NeuronNumber)
         {
 

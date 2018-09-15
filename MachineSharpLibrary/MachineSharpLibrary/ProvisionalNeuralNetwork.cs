@@ -199,7 +199,7 @@ namespace MachineSharpLibrary
                 //input layer
                 for(int i = 0; i < InputLayer.Count(); i++)
                 {
-                    InputLayer[i].Activation = InputArray[i];
+                    InputLayer[i].OutValue = InputArray[i];
                 }
 
                 //hidden layers
@@ -211,7 +211,7 @@ namespace MachineSharpLibrary
                             int iterator = 0;
                             foreach (Neuron N in LN)
                             {
-                                N.Activation = Sum(layerNumber, iterator);
+                                N.OutValue = Sum(layerNumber, iterator);
                                 iterator++;
                             }
                             layerNumber++;
@@ -227,7 +227,7 @@ namespace MachineSharpLibrary
                     foreach (Neuron N in OutputLayer)
                     {
                         //sum & squash of all activations * weights from previous layers
-                        N.Activation = Sum(1, iterator);
+                        N.OutValue = Sum(1, iterator);
                         iterator++;
                     }
                 }
@@ -238,7 +238,7 @@ namespace MachineSharpLibrary
                     foreach (Neuron N in OutputLayer)
                     {
                         //sum & squash of all activations * weights from previous layers
-                        N.Activation = Sum(HiddenLayers.Count+1, iterator);
+                        N.OutValue = Sum(HiddenLayers.Count+1, iterator);
                         iterator++;
                     }
                 }
@@ -247,7 +247,7 @@ namespace MachineSharpLibrary
             int OutIterator = 0;
             foreach(Neuron D in OutputLayer)
             {
-                ReturnArray[OutIterator] = D.Activation;
+                ReturnArray[OutIterator] = D.OutValue;
                 OutIterator++;
             }
             return ReturnArray;
@@ -264,14 +264,14 @@ namespace MachineSharpLibrary
             {
                 foreach (Neuron N in InputLayer)
                 {
-                    sum += (N.WeightsOut[neuronNumber] * N.Activation) + N.Bias;
+                    sum += (N.WeightsOut[neuronNumber] * N.OutValue) + N.Bias;
                 }
             }
             else
             {
                 foreach (Neuron N in HiddenLayers[layerNumber-2])
                 {
-                    sum += (N.WeightsOut[neuronNumber] * N.Activation) + N.Bias;
+                    sum += (N.WeightsOut[neuronNumber] * N.OutValue) + N.Bias;
                 }
             }
 

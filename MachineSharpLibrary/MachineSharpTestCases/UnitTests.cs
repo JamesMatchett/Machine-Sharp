@@ -117,7 +117,7 @@ namespace MachineSharpTestCases
                 double sum = 0;
                 foreach (Neuron N in LMM.Net[0])
                 {
-                    sum += ((N.Activation * N.WeightsOut[index])+N.Bias);
+                    sum += ((N.OutValue * N.WeightsOut[index])+N.Bias);
                 }
                 sum = Helper.Squish(sum);
                 Assert.AreEqual(sum, d);
@@ -141,11 +141,11 @@ namespace MachineSharpTestCases
                 double sum = 0;
                 foreach (Neuron OuterN in LMM.Net[0])
                 {
-                    sum += ((OuterN.Activation * OuterN.WeightsOut[indexer]) + OuterN.Bias);
+                    sum += ((OuterN.OutValue * OuterN.WeightsOut[indexer]) + OuterN.Bias);
                 }
                 indexer++;
                 sum = Helper.Squish(sum);
-                Assert.AreEqual(N.Activation, sum);
+                Assert.AreEqual(N.OutValue, sum);
             }
         }
 
@@ -165,11 +165,11 @@ namespace MachineSharpTestCases
                     double sum = 0;
                     foreach (Neuron OuterN in LMM.Net[i-1])
                     {
-                        sum += ((OuterN.Activation * OuterN.WeightsOut[indexer]) + OuterN.Bias);
+                        sum += ((OuterN.OutValue * OuterN.WeightsOut[indexer]) + OuterN.Bias);
                     }
                     indexer++;
                     sum = Helper.Squish(sum);
-                    Assert.AreEqual(N.Activation, sum);
+                    Assert.AreEqual(N.OutValue, sum);
                 }
             }
         }
@@ -183,7 +183,7 @@ namespace MachineSharpTestCases
             int index = 0;
             foreach(double inputValue in Inputs)
             {
-                Assert.AreEqual(inputValue, LMM.Net[0][index].Activation);
+                Assert.AreEqual(inputValue, LMM.Net[0][index].OutValue);
                 index++;
             }
         }
@@ -575,6 +575,34 @@ namespace MachineSharpTestCases
                 //make sure outputs still work
                var outputs = LMM.Predict(Helper.GetInputs(LMM.NumberOfInputs));
                 Assert.AreEqual(outputs.GetUpperBound(0) + 1, LMM.NumberOfOutputs);
+            }
+
+            //add a layer to a net that currently has no hidden layers
+            [TestMethod]
+            public void AddLayerToNoHiddens()
+            {
+                var LMM = new LMMCNet(5, 0, new int[] { }, 5, true);
+                int InitialLayers = LMM.Net.Count;
+                LMM.AddLayer(1, 5);
+                //check layer has been successfully added
+                Assert.AreEqual(LMM.Net.Count, InitialLayers + 1);
+
+                //check each neuron in new layer has correct number of weights out
+                foreach (Neuron N in LMM.Net[1])
+                {
+                    Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[2].Count);
+                }
+
+                //check each neuron in the previous layer has the correct number of weights out to the new layer
+                foreach (Neuron N in LMM.Net[0])
+                {
+                    Assert.AreEqual(N.WeightsOut.GetUpperBound(0) + 1, LMM.Net[1].Count);
+                }
+
+                //make sure outputs still work
+                var outputs = LMM.Predict(Helper.GetInputs(LMM.NumberOfInputs));
+                Assert.AreEqual(outputs.GetUpperBound(0) + 1, LMM.NumberOfOutputs);
+
             }
 
 

@@ -11,7 +11,7 @@ namespace MachineSharpLibrary
        //first index = weight from neuron to first neuron in next layer
        public double[] WeightsOut { get; set; }
        public double Bias { get; set; }
-       public double Activation = 0;
+       public double OutValue = 0;
        
         /// <summary>
         /// Create a neuron with empty weights out, bias default to 0
@@ -63,15 +63,11 @@ namespace MachineSharpLibrary
         {
             WeightsOut = new double[NumberOfWeightsOut];
             for (int i = 0; i < NumberOfWeightsOut; i++)
-            {
-                double w = random.NextDouble();
-                int isNeg = random.Next(0, 2);
-                if (isNeg == 1)
-                {
-                    w = -w;
-                }
-                WeightsOut[i] = w;
+            { 
+                //random -ve or +ve double operator
+                WeightsOut[i] = (random.Next(0, 2) == 1) ? -random.NextDouble() : random.NextDouble();  
             }
+       
             Bias = random.NextDouble();
         }
     }

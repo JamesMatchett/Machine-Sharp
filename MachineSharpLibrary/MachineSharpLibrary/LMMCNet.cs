@@ -8,7 +8,7 @@ namespace MachineSharpLibrary
 {
    public class LMMCNet
     {
-        public List<List<Neuron>> Net { get; set; }
+        public List<List<Neuron>> Net { get; private set; }
         public int NumberOfInputs { get; private set; }
         public int NumberOfHiddenLayers { get; private set; }
         public int[] NeuronsPerHiddenLayer { get; private set; }
@@ -28,10 +28,10 @@ namespace MachineSharpLibrary
             {
                 _localRandom = new Random();
             }
-            //Check exceptions, valid inputs
+            
+            Exception_CheckValidState();
 
-
-            //TODO, handling if no hidding layers, 
+            
             if (numberOfHiddenLayers == 0)
             {
                 Net.Add(MakeLayer(NumberOfInputs, numberOfInputs, MakeRandom));
@@ -72,26 +72,15 @@ namespace MachineSharpLibrary
             return ReturnList;
         }
 
-       public void CheckValidState()
-        {
-            //Number of hidden vs neurons per hidden 
-            if(this.NumberOfHiddenLayers != this.NeuronsPerHiddenLayer.Count())
-            {
-                throw new InvalidOperationException("Number of neurons per hidden layer does not match number of hidden layers");
-            }
-        }
 
         public double[] Predict (double[] Inputs)
         {
             //check valid input count
-            if (Inputs.Count() != NumberOfInputs)
-            {
-                throw new InvalidOperationException("Number of inputs supplied is not equal to the number the net can take (" + NumberOfInputs + ")");
-            }
+            Exception_Predict(Inputs.Count(), this.NumberOfInputs);
             //Set inputs
-            for(int i = 0; i < NumberOfInputs; i++)
+            for (int i = 0; i < NumberOfInputs; i++)
             {
-                Net[0][i].Activation = Inputs[i];
+                Net[0][i].OutValue = Inputs[i];
             }
 
             for (int LayerNumber = 1; LayerNumber < Net.Count(); LayerNumber++)
@@ -101,16 +90,16 @@ namespace MachineSharpLibrary
                     double sum = 0;
                     foreach(Neuron N in Net[LayerNumber - 1])
                     {
-                        sum += ((N.Activation * N.WeightsOut[Neuron]) + N.Bias);
+                        sum += ((N.OutValue * N.WeightsOut[Neuron]) + N.Bias);
                     }
-                    Net[LayerNumber][Neuron].Activation = Squish(sum);
+                    Net[LayerNumber][Neuron].OutValue = Sigmoid(sum);
                 }
             }
 
             double[] Outputs = new double[NumberOfOutputs];
             for(int N = 0; N < NumberOfOutputs; N++)
             {
-                Outputs[N] = Net.Last()[N].Activation;
+                Outputs[N] = Net[Net.Count - 1][N].OutValue;
             }
 
             return Outputs;
@@ -214,29 +203,9 @@ namespace MachineSharpLibrary
        /// <param name="NeuronsInNewLayer">How many neurons the new layer should occupy</param>
         public void AddLayer(int LayerNumber, int NeuronsInNewLayer)
         {
-            //Checklist
-            //Excpetions, LayerNumber above 0 and less than output D
-            //Exceptions, Neurons more than 0 D
-            //Make List<Neuron> D
-            //Add it to Net D
-            //Rebuild connections from layer previous D
-            //Make connections to next layer D (as part of MakeLayer)
-
-            if(LayerNumber < 1 || LayerNumber >= Net.Count - 1)
-            {
-                throw new InvalidOperationException("Layer number has to be larger than 0 and less than the index of the output layer which" +
-                    " will be incrimented when a layer is successfully added");
-            }
-
-            if(NeuronsInNewLayer <= 0)
-            {
-                throw new InvalidOperationException("New layer must have more than 0 neurons");
-            }
-
+            Exception_AddLayer(LayerNumber, NeuronsInNewLayer);
             List<Neuron> newLayer = MakeLayer(NeuronsInNewLayer, Net[LayerNumber].Count, true);
-
             Net.Insert(LayerNumber, newLayer);
-
             int NeuronNo = 0;
             foreach(Neuron N in Net[LayerNumber - 1])
             {
@@ -247,8 +216,6 @@ namespace MachineSharpLibrary
                 }
                 NeuronNo++;
             }
-
-
         }
 
         /// <summary>
@@ -262,10 +229,7 @@ namespace MachineSharpLibrary
             //Remove layer D 
             //set weights out from layer before to match neurons in layer after
 
-            if(LayerNumber < 1 || LayerNumber >= Net.Count - 1)
-            {
-                throw new InvalidOperationException("Layer cannot be smaller than 1 or the same as or larger than the output index");
-            }
+            Exception_Remove(LayerNumber);
 
             Net.RemoveAt(LayerNumber);
 
@@ -281,50 +245,72 @@ namespace MachineSharpLibrary
             }
         }
 
-        public void Train(double [] Inputs, double[] ExpectedOutputs)
+        public void Train(double[] Inputs, double[] ExpectedOutputs)
         {
 
-            var InitialCost = Cost(Predict(Inputs), ExpectedOutputs);
+            //Check input number of elements correct
+            Exception_Train(Inputs, ExpectedOutputs);
 
-            foreach (Neuron N in Net[Net.Count - 2])
+            //calculate actual outputs
+            double[] ActualOutputs = Predict(Inputs);
+
+            //evaluate cost for overall network
+            var costval = Cost(ActualOutputs, ExpectedOutputs);
+
+            //insert backprop here lol        
+
+        }
+
+        private void Exception_AddLayer(int LayerNumber, int NeuronsInNewLayer)
+        {
+            if (LayerNumber < 1 || LayerNumber > Net.Count - 1)
             {
-                var initCost = Cost(Predict(Inputs), ExpectedOutputs);
-
-                for(int i = 0; i < +N.WeightsOut.GetUpperBound(0); i++)
-                {
-                    N.WeightsOut[i] += 0.01;
-
-                    if(initCost > Cost(Predict(Inputs), ExpectedOutputs))
-                    {
-                        while(initCost > Cost(Predict(Inputs), ExpectedOutputs))
-                        {
-                            N.WeightsOut[i] += 0.001;
-                            initCost = Cost(Predict(Inputs), ExpectedOutputs);
-                            
-                            
-                        }
-                    }
-                    else
-                    {
-                        N.WeightsOut[i] -= 0.002;
-
-                        if (initCost > Cost(Predict(Inputs), ExpectedOutputs))
-                        { 
-                            while (initCost > Cost(Predict(Inputs), ExpectedOutputs))
-                            {
-                                N.WeightsOut[i] -= 0.001;
-                                initCost = Cost(Predict(Inputs), ExpectedOutputs);
-                            }
-                        }
-                        else
-                        {
-                            N.WeightsOut[i] += 0.001;
-                        }
-                    }
-                }
-
+                throw new InvalidOperationException("Layer number has to be larger than 0 and less than the index of the output layer which" +
+                    " will be incrimented when a layer is successfully added");
             }
-           
+
+            if (NeuronsInNewLayer <= 0)
+            {
+                throw new InvalidOperationException("New layer must have more than 0 neurons");
+            }
+        }
+
+        private void Exception_Train(double[] SuppInputs, double[] ExpOutputs)
+        {
+            if (ExpOutputs.GetUpperBound(0) + 1 != this.NumberOfOutputs)
+            {
+                throw new Exception("Number of expected outputs not equal to number of actual outputs");
+            }
+
+            if (SuppInputs.GetUpperBound(0) + 1 != this.NumberOfInputs)
+            {
+                throw new Exception("Number of inputs supplied not equal to number of expected inputs");
+            }
+        }
+
+        private void Exception_Remove(int LayerNumber)
+        {
+            if (LayerNumber < 1 || LayerNumber >= Net.Count - 1)
+            {
+                throw new InvalidOperationException("Layer cannot be smaller than 1 or the same as or larger than the output index");
+            }
+        }
+
+        public void Exception_CheckValidState()
+        {
+            //Number of hidden vs neurons per hidden 
+            if (this.NumberOfHiddenLayers != this.NeuronsPerHiddenLayer.Count())
+            {
+                throw new InvalidOperationException("Number of neurons per hidden layer does not match number of hidden layers");
+            }
+        }
+
+        private void Exception_Predict(int SuppliedInputs, int ExpectedInputs)
+        {
+            if (SuppliedInputs != ExpectedInputs)
+            {
+                throw new InvalidOperationException("Number of inputs supplied is not equal to the number the net can take (" + ExpectedInputs + ")");
+            }
         }
 
         private double Cost(double[] ActualOutput, double[] ExpectedOutput)
@@ -333,15 +319,16 @@ namespace MachineSharpLibrary
             //return the square of the differences
             for (int i = 0; i <= ActualOutput.GetUpperBound(0); i++)
             {
-                double difference = (ActualOutput[i] - ExpectedOutput[i]);
-                cost += Math.Pow(difference, 2);
+                cost += Math.Pow((ActualOutput[i] - ExpectedOutput[i]), 2);
             }
             return cost;
         }
 
-       
 
-        private double Squish(double input)
+        //Activation function?
+        
+
+        private double Sigmoid(double input)
         {
             return (1 / (1 + Math.Exp(-input)));
         }
@@ -386,4 +373,6 @@ namespace MachineSharpLibrary
             }
         }
     }
+
+    public enum Activations { Sigmoid }
 }

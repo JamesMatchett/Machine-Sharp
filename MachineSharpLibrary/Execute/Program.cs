@@ -68,7 +68,10 @@ namespace Execute
 
             }
 
+            sw.Close();
 
+
+            /*
             Random random = new Random();
             //choose random object
             for (int i = 0; i< 50; i++)
@@ -92,10 +95,26 @@ namespace Execute
                 bm.Save(filename);
                 
             }
+            
 
             Console.WriteLine("Files output");
             Console.ReadLine();
            
+    */
+
+            var tempList = new List<Mnist>();
+            int count2 = 0;
+            foreach(Mnist nn in TrainingList)
+            {
+                tempList.Add(nn);
+                if(count2 > 1000)
+                {
+                    break;
+                }
+                count2++;
+            }
+
+            TrainingList = tempList;
 
             int isn = 0;
             Console.WriteLine("Checking data -------------------");
@@ -111,7 +130,7 @@ namespace Execute
                 isn++;
             }
 
-            var LMM = new LMMCNet(28 * 28, 1, new int[] { 5 }, 10, false);
+            var LMM = new LMMCNet(28 * 28, 1, new int[] { 20 }, 10, true);
 
             Console.WriteLine("Training-------------------");
             int count = 0;
@@ -119,57 +138,82 @@ namespace Execute
             foreach(Mnist mn in TrainingList)
             {
                 count++;
-                Console.WriteLine("Executing {0} of {1}, cycle",count, total);
+                Console.WriteLine("Executing {0} of {1}",count, total);
    
 
                 var ExpectedOut = new double[10];
-                for(int i =0; i < 10; i++)
-                {
-                    if (i == Convert.ToInt32(mn.Label)){
-                        ExpectedOut[i] = 1;
-                    }
-                    else
-                    {
-                        ExpectedOut[i] = 0;
-                    }
-                }
+                ExpectedOut[mn.Label] = 1;
 
+                for (int i = 0; i <= mn.Data.GetUpperBound(0); i++)
+                {
+                    mn.Data[i] = mn.Data[i] / 255;
+                }
                 
-                    LMM.Train(mn.Data, ExpectedOut);
+                
+
+                LMM.Train(mn.Data,ExpectedOut);
                 
             }
 
             int totalSuccesses = 0;
             int totalGuesses = 0;
-
+            int secondGuesses = 0;
             Console.WriteLine("Guessing -----------------------");
             foreach(Mnist mn in TrainingList)
             {
                 totalGuesses++;
                 Console.WriteLine("On guess {0}", totalGuesses);
                 Console.WriteLine("{0} success from {1} guesses",totalSuccesses,totalGuesses);
+                Console.WriteLine("{0} first successes and {1} second guesses",totalSuccesses, secondGuesses);
 
                 var output = LMM.Predict(mn.Data);
+                
+                Console.WriteLine("-----------------");
                 int HighestIndex = 0;
                 double HighestValue = 0;
-                for(int i =0; i<5; i++)
+                int secondIndex = 0;
+                double secondValue = 0;
+                for(int i =0; i<=output.GetUpperBound(0); i++)
                 {
                     if (output[i] > HighestValue)
                     {
+                        secondIndex = HighestIndex;
+                        secondValue = HighestValue;
                         HighestIndex = i;
                         HighestValue = output[i];
                     }
                 }
 
+                Console.WriteLine("Array is");
+                int coun = 0;
+                foreach(double d in output)
+                {
+                    Console.WriteLine("{0} = {1}",coun,d);
+                    coun++;
+                }
+                Console.WriteLine("");
+                Console.WriteLine("Highest value is {0}",HighestValue);
+                Console.WriteLine("Index of highest is {0}",HighestIndex);
+                Console.WriteLine("Label is {0}",mn.Label);
+
+                if(mn.Label == HighestIndex)
+                {
+                    Console.WriteLine("Is matching");
+                } else if(mn.Label == secondIndex)
+                {
+                    secondGuesses++;
+                }
+                else
+                {
+                    Console.WriteLine("Is not matching");
+                }
+
+                
+             
+
                 if(HighestIndex == (mn.Label))
                 {
                     totalSuccesses++;
-
-                    if(mn.Label != 0)
-                    {
-                        Console.WriteLine("Not a 0");
-                        Console.ReadLine();
-                    }
                 }
 
             }

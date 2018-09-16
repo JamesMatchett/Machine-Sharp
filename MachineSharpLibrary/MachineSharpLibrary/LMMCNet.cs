@@ -8,21 +8,35 @@ namespace MachineSharpLibrary
 {
    public class LMMCNet : INetBase
     {
-        public List<List<Neuron>> Net { get; private set; }
+        public List<List<Neuron>> Net;
+        protected override Activations ActivationsFunction { get; set; }
         public int NumberOfInputs { get; private set; }
         public int NumberOfHiddenLayers { get; private set; }
         public int[] NeuronsPerHiddenLayer { get; private set; }
         public int NumberOfOutputs { get; private set; }
         private Random _localRandom { get; set; }
 
+        protected override void InitNet()
+        {
+           
+        }
+
+        
 
         public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom)
+        : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs,  MakeRandom, Activations.Sigmoid)
+        {
+            //constructor with no activation function specified 
+        }
+
+        public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom, Activations activations)
         {
             NumberOfInputs = numberOfInputs;
             NumberOfHiddenLayers = numberOfHiddenLayers;
             NeuronsPerHiddenLayer = neuronsPerHiddenLayer;
             NumberOfOutputs = numberOfOutputs;
             Net = new List<List<Neuron>>();
+            ActivationsFunction = activations;
 
             if (MakeRandom)
             {

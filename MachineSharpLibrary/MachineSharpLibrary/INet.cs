@@ -15,12 +15,14 @@ namespace MachineSharpLibrary
 
     public abstract class INetBase : INet
     {
-        public abstract Activations ActivationsFunction { get; set; }
+        protected abstract Activations ActivationsFunction { get; set; }
 
+        
         public abstract double[] Predict(double[] Inputs);
-        public abstract void Train(double[] Inputs, double[] ExpectedOutputs);
+        public abstract void Train(double[] Inputs, double[] ExpectedOutputs = null);
         protected abstract double Activation(double ValueIn, Activations activation);
-        protected abstract double Cost(double[] ActualOutput, double[] ExpectedOutput);
+        protected abstract double Cost(double[] ActualOutput, double[] ExpectedOutput = null);
+        protected abstract void InitNet();
     }
 
     public class Enums

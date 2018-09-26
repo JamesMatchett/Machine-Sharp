@@ -25,10 +25,10 @@ namespace MachineSharpLibrary
         protected abstract void InitNet();
     }
 
-    public class Enums
-    {
+   
         public enum Activations { Sigmoid, DSigmoid }
         public enum CostFunctions { }
-    }
+   
+
 
 }

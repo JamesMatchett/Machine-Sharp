@@ -7,6 +7,7 @@ using MachineSharpLibrary;
 using System.Net;
 using System.IO;
 using System.Drawing;
+using System.Threading;
 
 namespace Execute
 {
@@ -14,7 +15,7 @@ namespace Execute
     {
         static void Main(string[] args)
         {
-
+            /*
             Console.WriteLine("Parsing data -------------------");
             List<Mnist> TrainingList= new List<Mnist>();
             StreamReader sw = new StreamReader(@"E:\Music\training.txt");
@@ -100,7 +101,7 @@ namespace Execute
             Console.WriteLine("Files output");
             Console.ReadLine();
            
-    */
+
 
             var tempList = new List<Mnist>();
             int count2 = 0;
@@ -129,6 +130,8 @@ namespace Execute
                 }
                 isn++;
             }
+
+
 
             var LMM = new LMMCNet(28 * 28, 1, new int[] { 20 }, 10, true);
 
@@ -218,10 +221,44 @@ namespace Execute
 
             }
 
+        */
+            //begin XOR problem
+            //4 inputs of 1 or so
+            // 0 0 = 0
+            // 0 1 = 1
+            // 1 0 = 1
+            // 1 1 = 0
 
+            int numberOfTests = 5000;
+            var testList = new List<Xor>();
+            Random rnd = new Random();
+            for (int i = 0; i < numberOfTests;i++)
+            {
+                testList.Add(new Xor(rnd));
+            }
+
+            LMMCNet lMMCNet = new LMMCNet(4, 2, new int[] { 2, 2 }, 1, true);
+
+            Console.WriteLine("Compiled successfully");
+            Thread.Sleep(5000);
             Console.ReadLine();
         }
 
+
+
+        public struct Xor
+        {
+            public int a;
+            public int b;
+            public Xor(Random random)
+            {
+                a = random.Next(0, 2);
+                b = random.Next(0, 2);
+            }
+        }
+
+
+        /*
         public class Mnist
         {
           public  double[] Data { get; set; }
@@ -282,6 +319,10 @@ namespace Execute
             {
                 return (1 / (1 + Math.Exp(-input)));
             }
+
+
         }
+
+*/
     }
 }

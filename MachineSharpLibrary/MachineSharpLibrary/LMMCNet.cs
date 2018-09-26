@@ -340,9 +340,9 @@ namespace MachineSharpLibrary
 
 
         //Activation function?
-        protected override double Activation(double ValueIn, Activations activations)
+        protected override double Activation(double ValueIn, Activations activation)
         {
-            switch (activations)
+            switch (activation)
             {
                 case (Activations.Sigmoid):
                     return (1 / (1 + Math.Exp(-ValueIn)));
@@ -394,6 +394,6 @@ namespace MachineSharpLibrary
             }
         }
     }
+        
 
-    public enum Activations { Sigmoid }
 }

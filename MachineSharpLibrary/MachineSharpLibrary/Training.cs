@@ -29,6 +29,10 @@ namespace MachineSharpLibrary
         /// </summary>
         /// <param name="InputExpectedOutputList">Pairs of input data and their respective expected outputs</param>
         /// <returns></returns>
+        /// 
+        
+
+        /*
         public Double Train(List<InputExpectedOutputPair> InputExpectedOutputList)
         {
             //Calculate total cost of the network over all examples given
@@ -41,17 +45,37 @@ namespace MachineSharpLibrary
             }
             Double AverageCost = (CumulativeCost / InputExpectedOutputList.Count);
 
-            //Now focus on ONE training example
-            //nudge each neuron in approparite direciton
-            //magnitude of nudge is proportional to distance from ideal value
-            Double[] Difference = CalculateDifferencePerNeuron(InputExpectedOutputList.First());
-            
-            //now we can nudge the neuron by either changing bias, changing weighting, change activation from previous layer
-            //Focus on neurons from previous layers with stronger activations as they are more relevant to this single example
-            
-            //TODO Nudge function
+
+            //create an array that has enough indexes for the number of neurons from the previous layer
+            int PlaceHolderNumberOfNeurons = 20;
+            Double[] Nudges = new Double[PlaceHolderNumberOfNeurons];
+
+            foreach (InputExpectedOutputPair IEO in InputExpectedOutputList)
+            {
+                //Now focus on ONE training example
+                //nudge each neuron in approparite direciton
+                //magnitude of nudge is proportional to distance from ideal value
+                Double[] Difference = CalculateDifferencePerNeuron(InputExpectedOutputList.First());
+
+                //now we can nudge the neuron by either changing bias, changing weighting, change activation from previous layer
+                //Focus on neurons from previous layers with stronger activations as they are more relevant to this single example
+                //compute this for all outputs, even if they are outputs we do not want as we can aim to reduce them to 0
+
+                //keep track of what neuron we're on
+                int iterator = 0;
+                foreach (Double D in Difference)
+                {
+                    //look at all inputs and weights from previous layer
+                    //nudge appropriately by the difference
+                    //add nudge to the Double[] Nudges
+                    iterator++;
+                }
+            }
+
+            //apply result of nudges to neural network weightings
 
         }
+        */
 
         /// <summary>
         /// Calculates the cost of one training example for all the whole network

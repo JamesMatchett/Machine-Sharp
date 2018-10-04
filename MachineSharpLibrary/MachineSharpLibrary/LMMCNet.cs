@@ -24,12 +24,13 @@ namespace MachineSharpLibrary
         
 
         public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom)
-        : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs,  MakeRandom, Activations.Sigmoid)
+        : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs,  MakeRandom, Activations.Sigmoid, 0.269)
         {
-            //constructor with no activation function specified 
+            //constructor with no activation function specified & default learning rate
         }
 
-        public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom, Activations activations)
+        public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom, 
+            Activations activations, double InitLearningRate)
         {
             NumberOfInputs = numberOfInputs;
             NumberOfHiddenLayers = numberOfHiddenLayers;
@@ -37,6 +38,9 @@ namespace MachineSharpLibrary
             NumberOfOutputs = numberOfOutputs;
             Net = new List<List<Neuron>>();
             ActivationsFunction = activations;
+            LearningRate = InitLearningRate;
+
+            //TOOD:  Add exception handling for valid funcs
 
             if (MakeRandom)
             {
@@ -269,9 +273,58 @@ namespace MachineSharpLibrary
             double[] ActualOutputs = Predict(Inputs);
 
             //evaluate cost for overall network
-            var costval = Cost(ActualOutputs, ExpectedOutputs);
+            var costval = Cost(ActualOutputs, ExpectedOutputs).Sum();
 
-            //insert backprop here lol        
+            //dw (break apart) ->  (deriviate of error with respect to outputs) * (deriviative of the output with respect to the weights)
+
+            //Gradients = outputs
+            List<double> gradients = new List<double>();
+            //last layer number = Net.Count()-1;
+            //neuron = Net[lastLayer].Count();
+            int Lastlayer = Net.Count() - 1;
+            int NeuronCount = Net[Lastlayer].Count() -1 ;
+
+            for (int i = 0; i<NeuronCount; i++)
+            {
+                gradients.Add(Activation(Activations.DSigmoid,(Net[Lastlayer][i].OutValue)));
+            }
+
+            //cross multiply by errors (not that kind of cross multiply! (element wise))
+            double[] CostArray = Cost(ActualOutputs, ExpectedOutputs);
+            for (int i = 0; i < NeuronCount; i++)
+            {
+                gradients[i] *= CostArray[i];
+            }
+
+            //learning rate
+            for (int i = 0; i < NeuronCount; i++)
+            {
+                gradients[i] *= LearningRate;
+            }
+
+            //add grads + biases
+            for(int i = 0; i < NeuronCount; i++)
+            {
+                Net[Lastlayer][i].Bias += gradients[i];
+            }
+
+
+            //dot product
+            //Weights out, gradients
+            //1D list = gradients, weights out is a 2D list 
+            //2xn matrix by 1xn list 
+
+            //for every neuron in second to last layer
+            for(int i = 0; i<Net[Lastlayer-1].Count(); i++)
+            {
+                //for every weight out within that neuron
+                for(int j = 0; j < NeuronCount; j++)
+                {
+                    Net[Lastlayer - 1][i].WeightsOut[j] *= gradients[j];
+                }
+            }
+
+
 
         }
 
@@ -327,15 +380,16 @@ namespace MachineSharpLibrary
             }
         }
 
-        protected override double Cost(double[] ActualOutput, double[] ExpectedOutput)
+       
+        protected override double[] Cost(double [] ActualOutput, double [] ExpectedOutput)
         {
-            double cost = 0;
-            //return the square of the differences
+            double[] ReturnArray = new double[ActualOutput.Count()];
             for (int i = 0; i <= ActualOutput.GetUpperBound(0); i++)
             {
-                cost += Math.Pow((ActualOutput[i] - ExpectedOutput[i]), 2);
+                ReturnArray[i] = (ExpectedOutput[i]- ActualOutput[i]);
             }
-            return cost;
+            return ReturnArray;
+
         }
 
 

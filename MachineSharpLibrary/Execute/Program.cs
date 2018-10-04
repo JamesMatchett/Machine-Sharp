@@ -229,7 +229,7 @@ namespace Execute
             // 1 0 = 1
             // 1 1 = 0
 
-            int numberOfTests = 5000;
+            int numberOfTests = 5000000;
             var testList = new List<Xor>();
             Random rnd = new Random();
             for (int i = 0; i < numberOfTests;i++)
@@ -237,8 +237,30 @@ namespace Execute
                 testList.Add(new Xor(rnd));
             }
 
-            LMMCNet lMMCNet = new LMMCNet(4, 2, new int[] { 2, 2 }, 1, true);
+            LMMCNet lMMCNet = new LMMCNet(2, 2, new int[] { 2, 2 }, 1, true);
 
+            foreach(Xor x in testList)
+            {
+                lMMCNet.Train(new double[] { x.a, x.b }, x.Expected);
+            }
+
+            int worked = 0;
+            int failed = 0;
+            foreach (Xor x in testList)
+            {
+                var result = lMMCNet.Predict(new double[] { x.a, x.b });
+                if(Math.Round(result.First()) == x.Expected.First())
+                {
+                    worked++;
+                }
+                else
+                {
+                    failed++;
+                }
+            }
+
+
+            
             Console.WriteLine("Compiled successfully");
             Thread.Sleep(5000);
             Console.ReadLine();
@@ -250,10 +272,19 @@ namespace Execute
         {
             public int a;
             public int b;
+            public double[] Expected;
             public Xor(Random random)
             {
                 a = random.Next(0, 2);
                 b = random.Next(0, 2);
+                if(a == 0 && b == 1 || a==1 && b== 0)
+                {
+                    Expected = new double[] { 1 };
+                }
+                else
+                {
+                    Expected = new double[] { 0 };
+                }
             }
         }
 

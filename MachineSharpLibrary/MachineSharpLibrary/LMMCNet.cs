@@ -24,11 +24,7 @@ namespace MachineSharpLibrary
         
 
         public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom)
-<<<<<<< HEAD
-        : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs,  MakeRandom, Activations.Sigmoid, 0.5)
-=======
         : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs,  MakeRandom, Activations.Sigmoid, .7)
->>>>>>> cf08b1ef69d324726c78a5c9542032c2a5cbc5ba
         {
             //constructor with no activation function specified & default learning rate
         }
@@ -275,88 +271,49 @@ namespace MachineSharpLibrary
 
             //calculate actual outputs
             double[] ActualOutputs = Predict(Inputs);
-            
-            double[,] CostArray = Cost(ActualOutputs, ExpectedOutputs, true);
-            double[,] nextCostArray = new double[0, 0];
-            double[] previousLayerOutputs = new double[0];
 
-            for (int l = Net.Count() - 1; l > 0; l--)
-            {
-                int NeuronCount = Net[l].Count();
-                
-                nextCostArray = DotProduct(Transpose(GetWeights(l - 1)), CostArray);
-                double[,] gradients = new double[Net[l].Count(), 1];
-                for (int i = 0; i < NeuronCount; i++)
-                {
-                    gradients[i, 0] = (Activation(Activations.DSigmoid, (Net[l][i].OutValue)));
-                }
+            //evaluate cost for overall network
+            var costval = Cost(ActualOutputs, ExpectedOutputs).Sum();
 
-                //cross multiply by errors (not that kind of cross multiply! (element wise))
-                for (int i = 0; i < NeuronCount; i++)
-                {
-                    gradients[i, 0] *= CostArray[i, 0];
-                }
+            //dw (break apart) ->  (deriviate of error with respect to outputs) * (deriviative of the output with respect to the weights)
 
-<<<<<<< HEAD
-                //learning rate
-                for (int i = 0; i < NeuronCount; i++)
-                {
-                    gradients[i, 0] *= LearningRate;
-                }
-=======
             //Gradients = outputs
             List<double> gradients = new List<double>();
             //last layer number = Net.Count()-1;
             //neuron = Net[lastLayer].Count();
             int Lastlayer = Net.Count() - 1;
             int NeuronCount = Net[Lastlayer].Count();
->>>>>>> cf08b1ef69d324726c78a5c9542032c2a5cbc5ba
 
-                //add grads + biases
-                for (int i = 0; i < NeuronCount; i++)
-                {
-                    Net[l][i].Bias += gradients[i, 0];
-                }
-
-                if(l != 0 )
-                    previousLayerOutputs = Net[l - 1].Select(x => x.OutValue).ToArray();
-
-                var layerInputs = new double[1, previousLayerOutputs.Count()];
-                for(int i = 0; i < previousLayerOutputs.Count(); i++)
-                {
-                    layerInputs[0, i] = previousLayerOutputs[i];
-                }
-
-                var weightDeltas = DotProduct(gradients, layerInputs);
-
-                for(int i = 0; i < weightDeltas.GetLength(0); i++)
-                {
-                    for(int j = 0; j < weightDeltas.GetLength(1); j++)
-                    {
-                        Net[l - 1][j].WeightsOut[i] += weightDeltas[i, j];
-                    }
-                }
-
-                CostArray = nextCostArray;
-                
+            for (int i = 0; i<NeuronCount; i++)
+            {
+                gradients.Add(Activation(Activations.DSigmoid,(Net[Lastlayer][i].OutValue)));
             }
+
+            //cross multiply by errors (not that kind of cross multiply! (element wise))
+            double[] CostArray = Cost(ActualOutputs, ExpectedOutputs);
+            for (int i = 0; i < NeuronCount; i++)
+            {
+                gradients[i] *= CostArray[i];
+            }
+
+            //learning rate
+            for (int i = 0; i < NeuronCount; i++)
+            {
+                gradients[i] *= LearningRate;
+            }
+
+            //add grads + biases
+            for(int i = 0; i < NeuronCount; i++)
+            {
+                Net[Lastlayer][i].Bias += gradients[i];
+            }
+
 
             //dot product
             //Weights out, gradients
             //1D list = gradients, weights out is a 2D list 
-            //2xn matrix by 1xn list
-        }
+            //2xn matrix by 1xn list 
 
-<<<<<<< HEAD
-        private double[,] GetWeights(int layerIndex)
-        {
-            double[,] weights = new double[Net[layerIndex + 1].Count(), Net[layerIndex].Count()];
-            for(int i = 0; i < weights.GetLength(1); i++)
-            {
-                for (int j = 0; j < weights.GetLength(0); j++)
-                {
-                    weights[j, i] = Net[layerIndex][i].WeightsOut[j];
-=======
             double[,] weightDeltas = new double[gradients.Count(), Net[Lastlayer - 1].Count()];
             double tempSum = 0;
             for (int i = 0; i < gradients.Count(); i++)
@@ -385,42 +342,11 @@ namespace MachineSharpLibrary
                             Net[Lastlayer - 1][k].WeightsOut[l] += weightDeltas[k, l];
                         }
                     }
->>>>>>> cf08b1ef69d324726c78a5c9542032c2a5cbc5ba
                 }
             }
-            return weights;
-        }
 
-        private double[,] DotProduct(double[,] a, double[,] b)
-        {
-            double[,] c = new double[a.GetLength(0), b.GetLength(1)];
-            double tempSum = 0;
-            for (int i = 0; i < a.GetLength(0); i++)
-            {
-                for (int k = 0; k < b.GetLength(1); k++)
-                {
-                    tempSum = 0;
-                    for (int j = 0; j < a.GetLength(1); j++)
-                    {
-                        tempSum += a[i, j] * b[j, k];
-                    }
-                    c[i, k] = tempSum;
-                }
-            }
-            return c;
-        }
 
-        public double[,] Transpose(double[,] a)
-        {
-            double[,] b = new double[a.GetLength(1), a.GetLength(0)];
-            for(int i = 0; i < a.GetLength(0); i++)
-            {
-                for(int j = 0; j < a.GetLength(1); j++)
-                {
-                    b[j, i] = a[i, j];
-                }
-            }
-            return b;
+
         }
 
         private void Exception_AddLayer(int LayerNumber, int NeuronsInNewLayer)
@@ -482,17 +408,6 @@ namespace MachineSharpLibrary
             for (int i = 0; i <= ActualOutput.GetUpperBound(0); i++)
             {
                 ReturnArray[i] = (ExpectedOutput[i]- ActualOutput[i]);
-            }
-            return ReturnArray;
-
-        }
-
-        protected double[,] Cost(double[] ActualOutput, double[] ExpectedOutput, bool isTwoD)
-        {
-            double[,] ReturnArray = new double[ActualOutput.Count(), 1];
-            for (int i = 0; i <= ActualOutput.GetUpperBound(0); i++)
-            {
-                ReturnArray[i, 0] = (ExpectedOutput[i] - ActualOutput[i]);
             }
             return ReturnArray;
 

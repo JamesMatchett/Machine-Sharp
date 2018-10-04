@@ -229,7 +229,7 @@ namespace Execute
             // 1 0 = 1
             // 1 1 = 0
 
-            int numberOfTests = 5000000;
+            int numberOfTests = 50000;
             var testList = new List<Xor>();
             Random rnd = new Random();
             for (int i = 0; i < numberOfTests;i++)
@@ -237,7 +237,7 @@ namespace Execute
                 testList.Add(new Xor(rnd));
             }
 
-            LMMCNet lMMCNet = new LMMCNet(2, 2, new int[] { 2, 2 }, 1, true);
+            LMMCNet lMMCNet = new LMMCNet(2, 2, new int[] { 20, 60 }, 1, true);
 
             foreach(Xor x in testList)
             {

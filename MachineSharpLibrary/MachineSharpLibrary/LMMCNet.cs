@@ -24,7 +24,7 @@ namespace MachineSharpLibrary
         
 
         public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom)
-        : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs,  MakeRandom, Activations.Sigmoid, 0.269)
+        : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs,  MakeRandom, Activations.Sigmoid, .7)
         {
             //constructor with no activation function specified & default learning rate
         }
@@ -282,7 +282,7 @@ namespace MachineSharpLibrary
             //last layer number = Net.Count()-1;
             //neuron = Net[lastLayer].Count();
             int Lastlayer = Net.Count() - 1;
-            int NeuronCount = Net[Lastlayer].Count() -1 ;
+            int NeuronCount = Net[Lastlayer].Count();
 
             for (int i = 0; i<NeuronCount; i++)
             {
@@ -314,13 +314,34 @@ namespace MachineSharpLibrary
             //1D list = gradients, weights out is a 2D list 
             //2xn matrix by 1xn list 
 
-            //for every neuron in second to last layer
-            for(int i = 0; i<Net[Lastlayer-1].Count(); i++)
+            double[,] weightDeltas = new double[gradients.Count(), Net[Lastlayer - 1].Count()];
+            double tempSum = 0;
+            for (int i = 0; i < gradients.Count(); i++)
             {
-                //for every weight out within that neuron
-                for(int j = 0; j < NeuronCount; j++)
+                for (int k = 0; k < Net[Lastlayer - 1].Count(); k++)
                 {
-                    Net[Lastlayer - 1][i].WeightsOut[j] *= gradients[j];
+                    tempSum = 0;
+                    for (int j = 0; j < gradients.Count(); j++)
+                    {
+                        tempSum += gradients[i] * Net[Lastlayer - 1][j].OutValue;
+                    }
+                    weightDeltas[i, k] = tempSum;
+                }
+            }
+            
+            //MEGALOOP ™
+
+            for (int i = 0; i < weightDeltas.GetLength(0); i++)
+            {
+                for (int j = 0; j < weightDeltas.GetLength(1); j++)
+                {
+                    for (int k = 0; k < Net[Lastlayer - 1].Count()-1; k++)
+                    {
+                        for (int l = 0; l < Net[Lastlayer - 1][k].WeightsOut.Count()-1; l++)
+                        {
+                            Net[Lastlayer - 1][k].WeightsOut[l] += weightDeltas[k, l];
+                        }
+                    }
                 }
             }
 

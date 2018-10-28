@@ -229,7 +229,7 @@ namespace Execute
             // 1 0 = 1
             // 1 1 = 0
 
-            int numberOfTests = 50000;
+            int numberOfTests = 500000;
             var testList = new List<Xor>();
             Random rnd = new Random();
             for (int i = 0; i < numberOfTests;i++)
@@ -237,19 +237,42 @@ namespace Execute
                 testList.Add(new Xor(rnd));
             }
 
-            LMMCNet lMMCNet = new LMMCNet(2, 2, new int[] { 20, 60 }, 1, true);
+            LMMCNet lMMCNet = new LMMCNet(2, 3, new int[] { 10, 10, 2 }, 1,  rnd);
+            LMMCNet net = new LMMCNet(2, 3, new int[] { 10, 10, 2 }, 1,  rnd);
 
-            foreach(Xor x in testList)
+            if(lMMCNet._localRandom.GetHashCode() == net._localRandom.GetHashCode())
+            {
+                Console.WriteLine("Same hash");
+                Console.WriteLine("var 1 = {0}",lMMCNet._localRandom.NextDouble());
+                Console.WriteLine("var 2 = {0}", net._localRandom.NextDouble());
+                Console.WriteLine("var 3 = {0}", rnd.NextDouble());
+
+                if(lMMCNet._localRandom == net._localRandom && rnd == lMMCNet._localRandom)
+                {
+                    Console.WriteLine("Bananas");
+                }
+                Console.ReadLine();
+            }
+
+            foreach (Xor x in testList)
             {
                 lMMCNet.Train(new double[] { x.a, x.b }, x.Expected);
             }
 
             int worked = 0;
             int failed = 0;
-            foreach (Xor x in testList)
+            double result = 0;
+            Random random = new Random();
+            int count = 0;
+            while (count < 500000)
             {
-                var result = lMMCNet.Predict(new double[] { x.a, x.b });
-                if(Math.Round(result.First()) == x.Expected.First())
+                Xor x = new Xor(random);
+
+                Console.WriteLine("Running");
+                lMMCNet.Train(new double[] { x.a, x.b }, x.Expected);
+                result = lMMCNet.Net[lMMCNet.Net.Count() - 1][0].OutValue;
+
+                if (Math.Round(result) == x.Expected[0])
                 {
                     worked++;
                 }
@@ -257,10 +280,18 @@ namespace Execute
                 {
                     failed++;
                 }
+                
+                //Console.WriteLine("Result is {0}, Expected was {1}",result, x.Expected.First());
+                //Console.WriteLine("{0} sucesses, {1} fails",worked,failed);
+
+
+                count++;
+                //Console.ReadLine();
             }
 
 
-            
+            Console.WriteLine("{0} sucesses, {1} fails", worked, failed);
+
             Console.WriteLine("Compiled successfully");
             Thread.Sleep(5000);
             Console.ReadLine();
@@ -283,7 +314,7 @@ namespace Execute
                 }
                 else
                 {
-                    Expected = new double[] { 0 };
+                    Expected = new double[] { -1 };
                 }
             }
         }

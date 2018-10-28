@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MachineSharpLibrary
@@ -14,7 +15,7 @@ namespace MachineSharpLibrary
         public int NumberOfHiddenLayers { get; private set; }
         public int[] NeuronsPerHiddenLayer { get; private set; }
         public int NumberOfOutputs { get; private set; }
-        private Random _localRandom { get; set; }
+        public Random _localRandom { get; set; }
 
         protected override void InitNet()
         {
@@ -23,14 +24,14 @@ namespace MachineSharpLibrary
 
         
 
-        public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom)
-        : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs,  MakeRandom, Activations.Sigmoid, 0.5)
+        public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, Random rnd = null)
+        : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs, Activations.Sigmoid, 0.1, rnd)
         {
             //constructor with no activation function specified & default learning rate
         }
 
-        public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, bool MakeRandom, 
-            Activations activations, double InitLearningRate)
+        public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, 
+            Activations activations, double InitLearningRate, Random rnd = null)
         {
             NumberOfInputs = numberOfInputs;
             NumberOfHiddenLayers = numberOfHiddenLayers;
@@ -40,11 +41,13 @@ namespace MachineSharpLibrary
             ActivationsFunction = activations;
             LearningRate = InitLearningRate;
 
+            bool MakeRandom = (rnd != null);
+
             //TOOD:  Add exception handling for valid funcs
 
             if (MakeRandom)
             {
-                _localRandom = new Random();
+                _localRandom = rnd;
             }
             
             Exception_CheckValidState();
@@ -119,6 +122,8 @@ namespace MachineSharpLibrary
             {
                 Outputs[N] = Net[Net.Count - 1][N].OutValue;
             }
+
+            //Thread.Sleep(5000);
 
             return Outputs;
             

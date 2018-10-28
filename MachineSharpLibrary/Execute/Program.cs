@@ -240,20 +240,6 @@ namespace Execute
             LMMCNet lMMCNet = new LMMCNet(2, 3, new int[] { 10, 10, 2 }, 1,  rnd);
             LMMCNet net = new LMMCNet(2, 3, new int[] { 10, 10, 2 }, 1,  rnd);
 
-            if(lMMCNet._localRandom.GetHashCode() == net._localRandom.GetHashCode())
-            {
-                Console.WriteLine("Same hash");
-                Console.WriteLine("var 1 = {0}",lMMCNet._localRandom.NextDouble());
-                Console.WriteLine("var 2 = {0}", net._localRandom.NextDouble());
-                Console.WriteLine("var 3 = {0}", rnd.NextDouble());
-
-                if(lMMCNet._localRandom == net._localRandom && rnd == lMMCNet._localRandom)
-                {
-                    Console.WriteLine("Bananas");
-                }
-                Console.ReadLine();
-            }
-
             foreach (Xor x in testList)
             {
                 lMMCNet.Train(new double[] { x.a, x.b }, x.Expected);

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MachineSharpLibrary
 {
@@ -11,6 +12,7 @@ namespace MachineSharpLibrary
         //public facing methods
         double[] Predict(double[] Inputs);
         void Train(double[] Inputs, double[] ExpectedOutputs);
+        void Draw(ref Form ActiveForm);
     }
 
     public abstract class INetBase : INet
@@ -26,6 +28,7 @@ namespace MachineSharpLibrary
 
 
         public abstract double[] Predict(double[] Inputs);
+        public abstract void Draw(ref Form);
         public abstract void Train(double[] Inputs, double[] ExpectedOutputs = null);
         protected abstract double Activation(double ValueIn, Activations activation);
         protected abstract double[] Cost(double[] ActualOutput, double[] ExpectedOutput = null);

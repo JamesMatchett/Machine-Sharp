@@ -16,5 +16,15 @@ namespace MachineSharpGUI
         {
             InitializeComponent();
         }
+
+        private void RunButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SetInputsButton_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -227,16 +227,6 @@ namespace MachineSharpLibrary
             Exception_AddLayer(LayerNumber, NeuronsInNewLayer);
             List<Neuron> newLayer = MakeLayer(NeuronsInNewLayer, Net[LayerNumber].Count, true);
             Net.Insert(newLayer, LayerNumber, backAdjustNeeded);
-            int NeuronNo = 0;
-            foreach(Neuron N in Net[LayerNumber - 1])
-            {
-                N.WeightsOut = new double[Net[LayerNumber].Count()];
-                while(N.WeightsOut.GetUpperBound(0)+1 != Net[LayerNumber].Count())
-                {
-                    BackAdjustWeights(LayerNumber - 1, NeuronNo);
-                }
-                NeuronNo++;
-            }
         }
 
         /// <summary>
@@ -247,17 +237,6 @@ namespace MachineSharpLibrary
         {
             Exception_Remove(LayerNumber);
             Net.RemoveLayer(LayerNumber, backAdjustNeeded);
-            int NeuronNo = 0;
-
-            foreach(Neuron N in Net[LayerNumber - 1])
-            {
-                N.WeightsOut = new double[Net[LayerNumber].Count];
-                while(N.WeightsOut.GetUpperBound(0)+1 != Net[LayerNumber].Count)
-                {
-                    BackAdjustWeights(LayerNumber - 1, NeuronNo);
-                }
-                NeuronNo++;
-            }
         }
 
         public override void Train(double[] Inputs, double[] ExpectedOutputs)
@@ -268,12 +247,11 @@ namespace MachineSharpLibrary
 
             //calculate actual outputs
             double[] ActualOutputs = Predict(Inputs);
-            
             double[,] CostArray = Cost(ActualOutputs, ExpectedOutputs, true);
             double[,] nextCostArray = new double[0, 0];
             double[] previousLayerOutputs = new double[0];
 
-            for (int l = Net.Count()() - 1; l > 0; l--)
+            for (int l = Net.Count() - 1; l > 0; l--)
             {
                 int NeuronCount = Net[l].Count();
                 

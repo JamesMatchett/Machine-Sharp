@@ -70,5 +70,14 @@ namespace MachineSharpLibrary
        
             Bias = random.NextDouble();
         }
+
+        public int WeightsOutCount
+        {
+            get
+            {
+                return this.WeightsOut.GetUpperBound(0) + 1;
+            }
+        }
+
     }
 }

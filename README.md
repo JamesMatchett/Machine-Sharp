@@ -13,6 +13,6 @@ I've had an idea further to the EFME (Execution flow management Engine) idea tha
 
 A bit abstract without an example so take MNIST for example, traditionally we have 1 net that has 10 outputs, 0~9 and whichever output is highest we select as our answer, my solution is a little different where we have 10 nets, each net represents a number 0~9, each net is simulated with the same inputs and whichever net is the most positive we then select as our answer.
 
-The advantage of this is that each neutron in the net isn't shoved about 10 different ways for 10 different answers, instead it's more binary, either positive to show the inputs match the tested condition (i.e. the picture is of the expected number) or vice versa.
+The advantage of this is that each neuron in the net isn't shoved about 10 different ways for 10 different answers, instead it's more binary, either positive to show the inputs match the tested condition (i.e. the picture is of the expected number) or vice versa.
 
 This branch is the preliminary refactoring before binary sub-nets are fully implemented and tested. 

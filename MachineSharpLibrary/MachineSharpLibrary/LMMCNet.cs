@@ -9,7 +9,7 @@ namespace MachineSharpLibrary
 {
    public class LMMCNet : INetBase
     {
-        public List<List<Neuron>> Net;
+        public Net Net;
         protected override Activations ActivationsFunction { get; set; }
         public int NumberOfInputs { get; private set; }
         public int NumberOfHiddenLayers { get; private set; }
@@ -21,8 +21,6 @@ namespace MachineSharpLibrary
         {
            
         }
-
-        
 
         public LMMCNet(int numberOfInputs, int numberOfHiddenLayers, int[] neuronsPerHiddenLayer, int numberOfOutputs, Random rnd = null)
         : this(numberOfInputs, numberOfHiddenLayers,  neuronsPerHiddenLayer,  numberOfOutputs, Activations.Sigmoid, 0.1, rnd)
@@ -37,7 +35,7 @@ namespace MachineSharpLibrary
             NumberOfHiddenLayers = numberOfHiddenLayers;
             NeuronsPerHiddenLayer = neuronsPerHiddenLayer;
             NumberOfOutputs = numberOfOutputs;
-            Net = new List<List<Neuron>>();
+            Net = new Net();
             ActivationsFunction = activations;
             LearningRate = InitLearningRate;
 
@@ -120,7 +118,7 @@ namespace MachineSharpLibrary
             double[] Outputs = new double[NumberOfOutputs];
             for(int N = 0; N < NumberOfOutputs; N++)
             {
-                Outputs[N] = Net[Net.Count - 1][N].OutValue;
+                Outputs[N] = Net[Net.Count() - 1][N].OutValue;
             }
 
             //Thread.Sleep(5000);
@@ -132,12 +130,12 @@ namespace MachineSharpLibrary
         /// <summary>
         /// Adds a neuron to the end of a layer
         /// </summary>
-        /// <param name="LayerNumber">Which layer to add the neuron to, 0 indexed, layer 0 = input layer, Net.Count - 1 = output layer </param>  
+        /// <param name="LayerNumber">Which layer to add the neuron to, 0 indexed, layer 0 = input layer, Net.Count() - 1 = output layer </param>  
         public void AddNeuron(int LayerNumber)
         {
-            if(LayerNumber >= Net.Count || LayerNumber < 0)
+            if(LayerNumber >= Net.Count() || LayerNumber < 0)
             {
-                throw new InvalidOperationException(("Layer " + LayerNumber + " Does not exist, largest index of this net is " + (Net.Count - 1)));
+                throw new InvalidOperationException(("Layer " + LayerNumber + " Does not exist, largest index of this net is " + (Net.Count() - 1)));
             }
 
             //Add to input layer
@@ -149,7 +147,7 @@ namespace MachineSharpLibrary
 
             else { 
             //Add to Output layer
-                 if (LayerNumber == Net.Count - 1)
+                 if (LayerNumber == Net.Count() - 1)
                 {
                     Net[LayerNumber].Add(new Neuron(0));
                     NumberOfOutputs++;
@@ -173,9 +171,9 @@ namespace MachineSharpLibrary
         /// <param name="NeuronNumber"></param>
         public void RemoveNeuron(int LayerNumber, int NeuronNumber)
         {
-            if (LayerNumber >= Net.Count || LayerNumber < 0)
+            if (LayerNumber >= Net.Count() || LayerNumber < 0)
             {
-                throw new InvalidOperationException(("Layer " + LayerNumber + " Does not exist, largest index of this net is " + (Net.Count - 1)));
+                throw new InvalidOperationException(("Layer " + LayerNumber + " Does not exist, largest index of this net is " + (Net.Count() - 1)));
             }
 
             if (Net[LayerNumber].Count <= NeuronNumber || NeuronNumber < 0)
@@ -211,7 +209,7 @@ namespace MachineSharpLibrary
                 NumberOfInputs--;
             }
 
-            if (LayerNumber == Net.Count - 1)
+            if (LayerNumber == Net.Count() - 1)
             {
                 NumberOfOutputs--;
             }
@@ -224,11 +222,11 @@ namespace MachineSharpLibrary
        /// first hidden layer, every other layer is moved 1 up, cannot be 0 or the same as the output layer
        /// </param>
        /// <param name="NeuronsInNewLayer">How many neurons the new layer should occupy</param>
-        public void AddLayer(int LayerNumber, int NeuronsInNewLayer)
+        public void AddLayer(int LayerNumber, int NeuronsInNewLayer, bool backAdjustNeeded)
         {
             Exception_AddLayer(LayerNumber, NeuronsInNewLayer);
             List<Neuron> newLayer = MakeLayer(NeuronsInNewLayer, Net[LayerNumber].Count, true);
-            Net.Insert(LayerNumber, newLayer);
+            Net.Insert(newLayer, LayerNumber, backAdjustNeeded);
             int NeuronNo = 0;
             foreach(Neuron N in Net[LayerNumber - 1])
             {
@@ -245,18 +243,12 @@ namespace MachineSharpLibrary
         /// Removes a layer from the net
         /// </summary>
         /// <param name="LayerNumber">Which layer to remove, cannot be 0 or the same as the output layer</param>
-        public void RemoveLayer(int LayerNumber)
+        public void RemoveLayer(int LayerNumber, bool backAdjustNeeded)
         {
-            //Checklist
-            //Exception, layer number less than 1 or greater than output-1 D 
-            //Remove layer D 
-            //set weights out from layer before to match neurons in layer after
-
             Exception_Remove(LayerNumber);
-
-            Net.RemoveAt(LayerNumber);
-
+            Net.RemoveLayer(LayerNumber, backAdjustNeeded);
             int NeuronNo = 0;
+
             foreach(Neuron N in Net[LayerNumber - 1])
             {
                 N.WeightsOut = new double[Net[LayerNumber].Count];
@@ -281,7 +273,7 @@ namespace MachineSharpLibrary
             double[,] nextCostArray = new double[0, 0];
             double[] previousLayerOutputs = new double[0];
 
-            for (int l = Net.Count() - 1; l > 0; l--)
+            for (int l = Net.Count()() - 1; l > 0; l--)
             {
                 int NeuronCount = Net[l].Count();
                 
@@ -381,7 +373,7 @@ namespace MachineSharpLibrary
 
         private void Exception_AddLayer(int LayerNumber, int NeuronsInNewLayer)
         {
-            if (LayerNumber < 1 || LayerNumber > Net.Count - 1)
+            if (LayerNumber < 1 || LayerNumber > Net.Count() - 1)
             {
                 throw new InvalidOperationException("Layer number has to be larger than 0 and less than the index of the output layer which" +
                     " will be incrimented when a layer is successfully added");
@@ -408,7 +400,7 @@ namespace MachineSharpLibrary
 
         private void Exception_Remove(int LayerNumber)
         {
-            if (LayerNumber < 1 || LayerNumber >= Net.Count - 1)
+            if (LayerNumber < 1 || LayerNumber >= Net.Count() - 1)
             {
                 throw new InvalidOperationException("Layer cannot be smaller than 1 or the same as or larger than the output index");
             }

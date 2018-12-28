@@ -16,7 +16,7 @@ namespace MachineSharpLibrary
     public abstract class INetBase : INet
     {
         protected abstract Activations ActivationsFunction { get; set; }
-        private double _LearningRate{get;set;}
+        private double _LearningRate { get; set; }
 
         protected double LearningRate
         {
@@ -49,14 +49,14 @@ namespace MachineSharpLibrary
 
                 default:
                     throw new Exception("Invalid activation");
-                   
+
             }
 
         }
 
     }
-        public enum CostFunctions { }
-   
+    public enum CostFunctions { }
+
 
 
 }

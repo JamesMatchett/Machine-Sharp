@@ -1,9 +1,10 @@
 ﻿<Properties StartupConfiguration="{E537A80B-D2CC-44C1-B0F9-71F3D8F5533C}|Default">
-  <MonoDevelop.Ide.Workbench ActiveDocument="MachineSharpLibrary/LMMCNet.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MachineSharpLibrary/Neuron.cs">
     <Files>
       <File FileName="Execute/Program.cs" Line="248" Column="9" />
-      <File FileName="MachineSharpLibrary/LMMCNet.cs" Line="398" Column="4" />
-      <File FileName="MachineSharpLibrary/INet.cs" Line="31" Column="38" />
+      <File FileName="MachineSharpLibrary/LMMCNet.cs" Line="473" Column="50" />
+      <File FileName="MachineSharpLibrary/Net.cs" Line="78" Column="57" />
+      <File FileName="MachineSharpLibrary/Neuron.cs" Line="74" Column="28" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

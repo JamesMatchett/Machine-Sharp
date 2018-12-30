@@ -1,10 +1,10 @@
 ﻿using System;
 namespace MachineSharpLibrary
 {
-    //class that contains a list of static methods that take a ref net and
+    //static class that contains a list of static methods that take a ref net and
     //parameters to work out if an operation is valid
     //e.g. adding/removing a layer etc
-    public class NetExceptionsFactory
+    public static class NetExceptionsFactory
     {
         public static void Exception_AddLayer(ref Net net, int LayerNumber, int NeuronsInNewLayer)
         {
@@ -33,7 +33,7 @@ namespace MachineSharpLibrary
             }
         }
 
-        public static void Exception_Remove(ref Net net, int LayerNumber)
+        public static void Remove(ref Net net, int LayerNumber)
         {
             if (LayerNumber < 1 || LayerNumber >= net.Count() - 1)
             {
@@ -42,7 +42,7 @@ namespace MachineSharpLibrary
         }
 
 
-        public static void Exception_Predict(ref Net net, int SuppliedInputs, int ExpectedInputs)
+        public static void Predict(ref Net net, int SuppliedInputs, int ExpectedInputs)
         {
             if (SuppliedInputs != ExpectedInputs)
             {

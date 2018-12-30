@@ -229,30 +229,18 @@ namespace Execute
             // 1 0 = 1
             // 1 1 = 0
 
+            Console.WriteLine("Executing");
+
             int numberOfTests = 500000;
             var testList = new List<Xor>();
             Random rnd = new Random();
-            for (int i = 0; i < numberOfTests;i++)
+            for (int i = 0; i < numberOfTests; i++)
             {
                 testList.Add(new Xor(rnd));
             }
 
-            LMMCNet lMMCNet = new LMMCNet(2, 3, new int[] { 10, 10, 2 }, 1,  rnd);
-            LMMCNet net = new LMMCNet(2, 3, new int[] { 10, 10, 2 }, 1,  rnd);
-
-            if(lMMCNet._localRandom.GetHashCode() == net._localRandom.GetHashCode())
-            {
-                Console.WriteLine("Same hash");
-                Console.WriteLine("var 1 = {0}",lMMCNet._localRandom.NextDouble());
-                Console.WriteLine("var 2 = {0}", net._localRandom.NextDouble());
-                Console.WriteLine("var 3 = {0}", rnd.NextDouble());
-
-                if(lMMCNet._localRandom == net._localRandom && rnd == lMMCNet._localRandom)
-                {
-                    Console.WriteLine("Bananas");
-                }
-                Console.ReadLine();
-            }
+            LMMCNet lMMCNet = new LMMCNet(2, 3, new int[] { 10, 10, 2 }, 1, rnd);
+            LMMCNet net = new LMMCNet(2, 3, new int[] { 10, 10, 2 }, 1, rnd);
 
             foreach (Xor x in testList)
             {
@@ -267,10 +255,10 @@ namespace Execute
             while (count < 500000)
             {
                 Xor x = new Xor(random);
-
-                Console.WriteLine("Running");
-                lMMCNet.Train(new double[] { x.a, x.b }, x.Expected);
+                Console.WriteLine(count);
+                lMMCNet.Predict(new double[] { x.a, x.b });
                 result = lMMCNet.Net[lMMCNet.Net.Count() - 1][0].OutValue;
+                Console.WriteLine("Math.round is {0}, expected is {1}", Math.Round(result), x.Expected[0]);
 
                 if (Math.Round(result) == x.Expected[0])
                 {
@@ -280,18 +268,11 @@ namespace Execute
                 {
                     failed++;
                 }
-                
-                //Console.WriteLine("Result is {0}, Expected was {1}",result, x.Expected.First());
-                //Console.WriteLine("{0} sucesses, {1} fails",worked,failed);
-
 
                 count++;
-                //Console.ReadLine();
             }
 
-
             Console.WriteLine("{0} sucesses, {1} fails", worked, failed);
-
             Console.WriteLine("Compiled successfully");
             Thread.Sleep(5000);
             Console.ReadLine();
@@ -308,83 +289,15 @@ namespace Execute
             {
                 a = random.Next(0, 2);
                 b = random.Next(0, 2);
-                if(a == 0 && b == 1 || a==1 && b== 0)
+                if (a == 0 && b == 1 || a == 1 && b == 0)
                 {
                     Expected = new double[] { 1 };
                 }
                 else
                 {
-                    Expected = new double[] { -1 };
+                    Expected = new double[] { 0 };
                 }
             }
         }
-
-
-        /*
-        public class Mnist
-        {
-          public  double[] Data { get; set; }
-           public int Label { get; set; }
-           
-            public Mnist(double[] data, int label)
-            {
-                Data = data;
-                Label = label;
-            }
-        }
-
-        public class Helper
-        {
-            public static double[] GetInputs(int NeuronsPerLayer)
-            {
-                double[] ReturnArray = new double[NeuronsPerLayer];
-                for (int i = 0; i < NeuronsPerLayer; i++)
-                {
-                    ReturnArray[i] = 1;
-                }
-
-                return ReturnArray;
-            }
-
-            public static int[] GetHLayerArray(int NHiddenLayers, int NeuronsPerLayer)
-            {
-                int[] ReturnArray = new int[NHiddenLayers];
-                for (int j = 0; j < NHiddenLayers; j++)
-                {
-                    ReturnArray[j] = NeuronsPerLayer;
-                }
-                return ReturnArray;
-            }
-
-            public static int[] GetHLayerRand(int NHiddenLayers, Random random)
-            {
-                int[] ReturnArray = new int[NHiddenLayers];
-                for (int j = 0; j < NHiddenLayers; j++)
-                {
-                    ReturnArray[j] = random.Next(1, 10);
-                }
-                return ReturnArray;
-            }
-
-            //A "true" neural net is one with varying neurons between layers and random number of layers & weights
-            public static LMMCNet GetTrueNeuralNet()
-            {
-                Random random = new Random();
-                int NHiddenLayers = random.Next(1, 5);
-                int NInputs = random.Next(1, 10);
-                int NOutputs = random.Next(1, 10);
-                int[] NeuronsPerHiddenLayer = GetHLayerRand(NHiddenLayers, random);
-                return new LMMCNet(NInputs, NHiddenLayers, NeuronsPerHiddenLayer, NOutputs, true);
-            }
-
-            public static double Squish(double input)
-            {
-                return (1 / (1 + Math.Exp(-input)));
-            }
-
-
-        }
-
-*/
     }
 }

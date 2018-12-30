@@ -297,9 +297,7 @@ namespace MachineSharpLibrary
                         Net[l - 1][j].WeightsOut[i] += weightDeltas[i, j];
                     }
                 }
-
                 CostArray = nextCostArray;
-                
             }
             
         }

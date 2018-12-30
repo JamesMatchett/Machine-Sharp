@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MachineSharpLibrary
 {
-    public class Net
+    public class Net 
     {
         private List<List<Neuron>> _net;
 
@@ -13,7 +13,6 @@ namespace MachineSharpLibrary
             {
                 return _net[0].Count;
             }
-
         }
 
         public int NumberOfOutputs
@@ -61,6 +60,8 @@ namespace MachineSharpLibrary
             }
         }
 
+        //include a default constructor to allow for future constructors
+        //to be added if needed.
         public Net()
         {
             _net = new List<List<Neuron>>();
@@ -95,8 +96,10 @@ namespace MachineSharpLibrary
             }
         }
 
+        //public BackAdjust that backadjusts a whole layer when called
         public void BackAdjustWeights(int LayerNumber)
         {
+            //todo assert layernumber provided is valid
             int NeuronNo = 0;
             foreach (Neuron N in _net[LayerNumber - 1])
             {
@@ -109,6 +112,7 @@ namespace MachineSharpLibrary
             }
         }
 
+        //internal backadjustment that works on a specific neuron in a specific layer
         private void _backAdjustWeights(int LayerToBeAdjusted, int NeuronNumber)
         {
             if (_net[LayerToBeAdjusted][0].WeightsOutCount > _net[LayerToBeAdjusted + 1].Count)

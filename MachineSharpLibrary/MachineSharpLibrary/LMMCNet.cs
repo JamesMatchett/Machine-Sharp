@@ -104,12 +104,17 @@ namespace MachineSharpLibrary
 
             for (int LayerNumber = 1; LayerNumber < Net.Count(); LayerNumber++)
             {
+
+                //reset each neuron
+                
+
                 for (int Neuron = 0; Neuron < Net[LayerNumber].Count(); Neuron++)
                 {
+                    ResetNeuron(LayerNumber, Neuron);
                     double sum = 0;
                     foreach(Neuron N in Net[LayerNumber - 1])
                     {
-                        sum += ((N.OutValue * N.WeightsOut[Neuron]) + N.Bias);
+                        sum += (N.OutValue * N.WeightsOut[Neuron]);
                     }
                     Net[LayerNumber][Neuron].OutValue = Activation(sum,Activations.Sigmoid);
                 }
@@ -125,6 +130,11 @@ namespace MachineSharpLibrary
 
             return Outputs;
             
+        }
+
+        public void ResetNeuron(int LayerNumber, int NeuronNumber)
+        {
+            Net[LayerNumber][NeuronNumber].OutValue = Net[LayerNumber][NeuronNumber].Bias;
         }
 
         /// <summary>

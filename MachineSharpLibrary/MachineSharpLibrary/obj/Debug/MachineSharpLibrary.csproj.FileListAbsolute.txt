@@ -4,14 +4,13 @@ C:/Users/Jordan/Desktop/Computer Science/Projects/MachineSharp/MachineSharpLibra
 C:/Users/Jordan/Desktop/Computer Science/Projects/MachineSharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.csproj.CoreCompileInputs.cache
 C:/Users/Jordan/Desktop/Computer Science/Projects/MachineSharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.dll
 C:/Users/Jordan/Desktop/Computer Science/Projects/MachineSharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.pdb
-D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.csproj.CoreCompileInputs.cache
-D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.dll
-D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.pdb
-D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/bin/Debug/MachineSharpLibrary.dll
-D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/bin/Debug/MachineSharpLibrary.pdb
-D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.csprojResolveAssemblyReference.cache
 /Users/jamesm@kainos.com/Desktop/Personal/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/bin/Debug/MachineSharpLibrary.dll
 /Users/jamesm@kainos.com/Desktop/Personal/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/bin/Debug/MachineSharpLibrary.pdb
 /Users/jamesm@kainos.com/Desktop/Personal/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.csproj.CoreCompileInputs.cache
 /Users/jamesm@kainos.com/Desktop/Personal/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.dll
 /Users/jamesm@kainos.com/Desktop/Personal/Machine-Sharp/MachineSharpLibrary/MachineSharpLibrary/obj/Debug/MachineSharpLibrary.pdb
+D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\MachineSharpLibrary\bin\Debug\MachineSharpLibrary.dll
+D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\MachineSharpLibrary\bin\Debug\MachineSharpLibrary.pdb
+D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\MachineSharpLibrary\obj\Debug\MachineSharpLibrary.csproj.CoreCompileInputs.cache
+D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\MachineSharpLibrary\obj\Debug\MachineSharpLibrary.dll
+D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\MachineSharpLibrary\obj\Debug\MachineSharpLibrary.pdb

@@ -285,12 +285,68 @@ namespace Execute
             Console.ReadLine();
         }
 
+        static void BinaryNetXOR()
+        {
+            //begin XOR problem
+            //4 inputs of 1 or so
+            // 0 0 = 0
+            // 0 1 = 1
+            // 1 0 = 1
+            // 1 1 = 0
 
+            Console.WriteLine("Executing");
+
+            int numberOfTests = 500000;
+            var testList = new List<Xor>();
+            Random rnd = new Random();
+            for (int i = 0; i < numberOfTests; i++)
+            {
+                testList.Add(new Xor(rnd));
+            }
+
+            var factory = new BinaryNetFactory(new double[] { 0.1, 0.9 },
+            2, new int[] { 10, 10, 2 }, rnd);
+
+            foreach (Xor x in testList)
+            {
+                factory.Train(new double[] { x.a, x.b }, x.Expected);
+            }
+
+            int worked = 0;
+            int failed = 0;
+            double result = 0;
+            Random random = new Random();
+            int count = 0;
+            while (count < 500000)
+            {
+                Xor x = new Xor(random);
+                Console.WriteLine(count);
+                factory.Train(new double[] { x.a, x.b }, x.Expected);
+                result = factory.Predict(new double[] { x.a, x.b })[0];
+                Console.WriteLine("result is {0}, expected is {1}", (result), x.Expected[0]);
+
+                if (result.ToString() == x.Expected[0].ToString())
+                {
+                    worked++;
+                }
+                else
+                {
+                    failed++;
+                }
+
+                count++;
+            }
+
+            Console.WriteLine("{0} sucesses, {1} fails", worked, failed);
+            Console.WriteLine("Compiled successfully");
+            Thread.Sleep(5000);
+            Console.ReadLine();
+        }
 
         static void Main(string[] args)
         {
 
-
+            BinaryNetXOR();
            
         }
 
@@ -307,11 +363,11 @@ namespace Execute
                 b = random.Next(0, 2);
                 if (a == 0 && b == 1 || a == 1 && b == 0)
                 {
-                    Expected = new double[] { 0.8 };
+                    Expected = new double[] { 0.9 };
                 }
                 else
                 {
-                    Expected = new double[] { 0.2 };
+                    Expected = new double[] { 0.1 };
                 }
             }
         }

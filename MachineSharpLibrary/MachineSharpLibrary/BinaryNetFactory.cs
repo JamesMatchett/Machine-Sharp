@@ -28,6 +28,7 @@ namespace MachineSharpLibrary
         {
             double Answer = 0;
             double Strength = 0;
+            //todo Parallel.foreach
             foreach (BinaryNet B in NetList)
             {
                 var result = B.Net.Predict(Inputs);
@@ -43,6 +44,7 @@ namespace MachineSharpLibrary
 
         public void Train(double[] Inputs, double[] ExpectedOutputs)
         {
+            //todo Parallel.foreach
             foreach (BinaryNet B in NetList) 
             {
                 B.Net.Train(Inputs, ExpectedOutputs);

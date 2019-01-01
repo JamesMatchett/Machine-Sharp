@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 namespace MachineSharpLibrary
 {
-    public class BinaryNetFactory : INet
+    public class BinaryNetFactory 
     {
         private List<BinaryNet> NetList = new List<BinaryNet>();
 
@@ -42,11 +42,21 @@ namespace MachineSharpLibrary
 
         }
 
-        public void Train(double[] Inputs, double[] ExpectedOutputs)
+        public void Train(double[] Inputs, double ExpectedOutput)
         {
+            double[] ExpectedOutputs = new double[] {0 };
             //todo Parallel.foreach
-            foreach (BinaryNet B in NetList) 
+            foreach (BinaryNet B in NetList)
             {
+                if (ExpectedOutput.ToString() == B.SoughtAnswer.ToString())
+                {
+                    ExpectedOutputs[0] = 1;
+                }
+                else
+                {
+                    ExpectedOutputs[0] = 0;
+                }
+
                 B.Net.Train(Inputs, ExpectedOutputs);
             }
         }

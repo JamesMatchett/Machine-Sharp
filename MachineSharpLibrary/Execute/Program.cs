@@ -309,7 +309,7 @@ namespace Execute
 
             foreach (Xor x in testList)
             {
-                factory.Train(new double[] { x.a, x.b }, x.Expected);
+                factory.Train(new double[] { x.a, x.b }, x.Expected[0]);
             }
 
             int worked = 0;
@@ -321,7 +321,7 @@ namespace Execute
             {
                 Xor x = new Xor(random);
                 Console.WriteLine(count);
-                factory.Train(new double[] { x.a, x.b }, x.Expected);
+                factory.Train(new double[] { x.a, x.b }, x.Expected[0]);
                 result = factory.Predict(new double[] { x.a, x.b })[0];
                 Console.WriteLine("result is {0}, expected is {1}", (result), x.Expected[0]);
 

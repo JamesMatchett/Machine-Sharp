@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MachineSharpLibrary
 {
-    interface INet
+   public interface INet
     {
         //public facing methods
         double[] Predict(double[] Inputs);

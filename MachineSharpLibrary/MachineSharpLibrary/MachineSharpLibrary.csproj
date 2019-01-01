@@ -49,6 +49,8 @@
     <Compile Include="ProvisionalNeuralNetwork.cs" />
     <Compile Include="Net.cs" />
     <Compile Include="NetExceptionsFactory.cs" />
+    <Compile Include="BinaryNetFactory.cs" />
+    <Compile Include="BinaryNet.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

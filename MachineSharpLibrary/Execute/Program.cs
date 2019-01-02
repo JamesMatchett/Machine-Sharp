@@ -276,6 +276,7 @@ namespace Execute
                     failed++;
                 }
 
+                Hessian(lMMCNet.Net);
                 count++;
             }
 
@@ -343,10 +344,83 @@ namespace Execute
             Console.ReadLine();
         }
 
+        static void Hessian(Net net)
+        {
+            //40 px wide per layer (10 px actual neuron) 
+            int Width = (net.NumberOfLayers * 40) + 40;
+
+            //20 px height per neuron  (5px seperation each side, 10px actual neuron)
+            int maxNeuronsInALayer = 0;
+            for(int i = 0; i < net.NumberOfLayers; i++)
+            {
+                maxNeuronsInALayer = (net[i].Count > maxNeuronsInALayer) ? net[i].Count : maxNeuronsInALayer;
+            }
+            int Height = ((maxNeuronsInALayer) * 20) + 40;
+
+            Bitmap bitmap = new Bitmap(Width, Height);
+            setBackground(Width, Height, ref bitmap);
+
+            //draw layer by layer
+            int x = 0, y = 0;
+            for(int i =0; i<net.NumberOfLayers; i++)
+            {
+                for(int j = 0; j < net[i].Count; j++)
+                {
+                    y += 5;
+                    drawNeuron(x, y, ref bitmap, net[i, j].OutValue);
+                    y += 10;
+                    y += 5;
+                }
+            
+                x += 40;
+                y = 0;
+            }
+
+            //save to "E://music/BitmapTest@
+            bitmap.Save(@"E:\music\Bitmaptest.png");
+            //break point line for evalutation
+            x = 0;
+            
+
+        }
+
+        static void setBackground(int width, int height, ref Bitmap bitmap)
+        {
+            Color color = Color.FromArgb(0, 0, 0);
+            for(int x=0; x<width; x++)
+            {
+                for(int y=0; y < height; y++)
+                {
+                    bitmap.SetPixel(x, y, color);
+                }
+            }
+        }
+
+        static void drawNeuron(int x, int y, ref Bitmap bitmap, double activation)
+        {
+            int colour = (int)Math.Round(activation * 255);
+            colour += 20;
+
+            colour = colour > 255 ? 255 : colour;
+
+            Color color = Color.FromArgb(colour, colour, colour);
+            for(int innerX = 0; innerX < 10; innerX++)
+            {
+                for(int innerY = 0; innerY < 10; innerY++)
+                {
+                    bitmap.SetPixel(innerX + x, innerY + y, color);
+                }
+            }     
+            
+            
+
+            
+        }
+
         static void Main(string[] args)
         {
-
-            BinaryNetXOR();
+            XOR();
+            //BinaryNetXOR();
            
         }
 

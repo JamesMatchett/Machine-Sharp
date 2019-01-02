@@ -33,6 +33,14 @@ namespace MachineSharpLibrary
             return l.ToArray();
         }
 
+        public int NumberOfLayers
+        {
+            get 
+            {
+                return _net.Count;
+            }
+        }
+
         //indexer to return layer when indexed
         public List<Neuron> this[int index]
         {

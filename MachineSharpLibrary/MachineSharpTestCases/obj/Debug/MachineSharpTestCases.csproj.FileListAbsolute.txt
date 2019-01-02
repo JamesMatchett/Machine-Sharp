@@ -1,2 +1,0 @@
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\MachineSharpTestCases\obj\Debug\MachineSharpTestCases.csprojResolveAssemblyReference.cache
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\MachineSharpTestCases\obj\Debug\MachineSharpTestCases.csproj.CoreCompileInputs.cache

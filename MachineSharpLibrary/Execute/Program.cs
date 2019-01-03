@@ -14,9 +14,204 @@ namespace Execute
     class Program
     {
 
+        static void MNISTBinaryNet()
+        {
+            Console.WriteLine("Parsing data -------------------");
+            List<Mnist> TrainingList = new List<Mnist>();
+            StreamReader sw = new StreamReader(@"E:\Music\training.txt");
+
+            List<string> charstr = new List<string>();
+            string build = "";
+            int index = -1;
+            int label = 0;
+            double[] data = new double[28 * 28];
+            while (!sw.EndOfStream)
+            {
+                int next = sw.Read() - 48;
+                if (next == -4)
+                {
+                    if (index == -1)
+                    {
+                        label = Convert.ToInt32(build);
+                        index++;
+                    }
+                    else
+                    {
+                        data[index] = Convert.ToInt32(build);
+                        index++;
+                    }
+
+                    if (index == (28 * 28) - 1)
+                    {
+                        TrainingList.Add(new Mnist(data, label));
+                        index = -1;
+                        data = new double[28 * 28];
+                        build = "";
+                        sw.Read();
+                        sw.Read();
+                    }
+
+                    build = "";
+                }
+                else
+                {
+                    //check for line breaks & spaces
+                    if (build.Contains(@"\"))
+                    {
+                        build = build.Remove(build.IndexOf(@"\"));
+                    }
+                    if (build.Contains(@"n"))
+                    {
+                        build = build.Remove(build.IndexOf(@"n"));
+                    }
+                    build += next;
+                }
+
+            }
+
+            sw.Close();
+
+
+
+            Random random = new Random();
+            //choose random object
+            for (int i = 0; i < 50; i++)
+            {
+
+                Mnist mn = TrainingList[random.Next(0, TrainingList.Count - 1)];
+                Bitmap bm1 = new Bitmap(28, 28);
+
+                index = 0;
+                for (int x = 0; x < 28; x++)
+                {
+                    for (int y = 0; y < 28; y++)
+                    {
+                        int bright = Convert.ToInt32(mn.Data[index]);
+                        bm1.SetPixel(y, x, Color.FromArgb(255, bright, bright, bright));
+                        index++;
+                    }
+                }
+
+                string filename = @"E:\Music\Imagetest" + i + " " + mn.Label + ".png";
+                bm1.Save(filename);
+
+            }
+
+
+            Console.WriteLine("Files output | press enter to continue");
+            //Console.ReadLine();
+
+
+
+            var tempList = new List<Mnist>();
+            int count2 = 0;
+            foreach (Mnist nn in TrainingList)
+            {
+                tempList.Add(nn);
+                if (count2 > 20000)
+                {
+                    break;
+                }
+                count2++;
+            }
+
+            TrainingList = tempList;
+
+            int isn = 0;
+            Console.WriteLine("Checking data -------------------");
+            foreach (Mnist mn in TrainingList)
+            {
+                int value = Convert.ToInt32(mn.Label);
+                if (value > 9 || value < 0)
+                {
+                    Console.WriteLine("error at {0}", isn);
+
+                    Console.ReadLine();
+                }
+                isn++;
+            }
+
+
+            var fac = new BinaryNetFactory(new double[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, 28 * 28, new int[] { 10 }, new Random());
+            
+
+            Console.WriteLine("Training-------------------");
+            int count = 0;
+            int total = TrainingList.Count;
+            foreach (Mnist mn in TrainingList)
+            {
+                count++;
+                Console.WriteLine("Executing {0} of {1}", count, total);
+
+                var ExpectedOut = new double[10];
+                ExpectedOut[mn.Label] = 1;
+
+                for (int i = 0; i <= mn.Data.GetUpperBound(0); i++)
+                {
+                    mn.Data[i] = mn.Data[i] / 255;
+                }
+
+
+
+                fac.Train(mn.Data, mn.Label);
+
+            }
+
+            //load chris' handwriting
+            Bitmap bm = new Bitmap(@"E:\music\ChrisWriting.png");
+            double[] dataArray = new double[28 * 28];
+            int dataIndex = 0;
+            for(int x = 0; x < 28; x++)
+            {
+                for(int y = 0; y < 28; y++)
+                {
+                    dataArray[dataIndex] = bm.GetPixel(x, y).GetBrightness() != 0 ? bm.GetPixel(x,y).GetBrightness() : 0;
+                    dataIndex++;
+                }
+            }
+
+          
+            var result = fac.Predict(dataArray);
+            Console.WriteLine("Result of Chris' handwriting is {0}",result[0]);
+            Console.ReadLine();
+
+            int totalSuccesses = 0;
+            int totalGuesses = 0;
+            int secondGuesses = 0;
+            Console.WriteLine("Guessing -----------------------");
+            foreach (Mnist mn in TrainingList)
+            {
+                totalGuesses++;
+                Console.WriteLine("On guess {0}", totalGuesses);
+                Console.WriteLine("{0} success from {1} guesses", totalSuccesses, totalGuesses);
+                Console.WriteLine("{0} first successes and {1} second guesses", totalSuccesses, secondGuesses);
+
+                var output = fac.Predict(mn.Data);
+
+                Console.WriteLine("-----------------");
+                
+
+                if (mn.Label == output[0])
+                {
+                    Console.WriteLine("Is matching");
+                    totalSuccesses++;
+                }
+              
+                else
+                {
+                    Console.WriteLine("Is not matching");
+                }
+               
+            }
+
+            Console.WriteLine("{0} successes, {1} failures", totalSuccesses, totalGuesses - totalSuccesses);
+            Console.ReadLine();
+
+        }
+
         static void MNIST()
         {
-            /*
+            
                 Console.WriteLine("Parsing data -------------------");
                 List<Mnist> TrainingList= new List<Mnist>();
                 StreamReader sw = new StreamReader(@"E:\Music\training.txt");
@@ -73,7 +268,7 @@ namespace Execute
                 sw.Close();
 
 
-                /*
+                
                 Random random = new Random();
                 //choose random object
                 for (int i = 0; i< 50; i++)
@@ -99,7 +294,7 @@ namespace Execute
                 }
 
 
-                Console.WriteLine("Files output");
+                Console.WriteLine("Files output | press enter to continue");
                 Console.ReadLine();
 
 
@@ -109,7 +304,7 @@ namespace Execute
                 foreach(Mnist nn in TrainingList)
                 {
                     tempList.Add(nn);
-                    if(count2 > 1000)
+                    if(count2 > 15000)
                     {
                         break;
                     }
@@ -133,8 +328,8 @@ namespace Execute
                 }
 
 
-
-                var LMM = new LMMCNet(28 * 28, 1, new int[] { 20 }, 10, true);
+           
+                var LMM = new LMMCNet(28 * 28, 1, new int[] { 10 }, 10, new Random());
 
                 Console.WriteLine("Training-------------------");
                 int count = 0;
@@ -143,7 +338,6 @@ namespace Execute
                 {
                     count++;
                     Console.WriteLine("Executing {0} of {1}",count, total);
-
 
                     var ExpectedOut = new double[10];
                     ExpectedOut[mn.Label] = 1;
@@ -171,6 +365,7 @@ namespace Execute
                     Console.WriteLine("{0} first successes and {1} second guesses",totalSuccesses, secondGuesses);
 
                     var output = LMM.Predict(mn.Data);
+                    Hessian(LMM.Net);
 
                     Console.WriteLine("-----------------");
                     int HighestIndex = 0;
@@ -222,7 +417,10 @@ namespace Execute
 
                 }
 
-    */
+            Console.WriteLine("{0} successes, {1} failures",totalSuccesses,totalGuesses-totalSuccesses);
+            Console.ReadLine();
+
+    
 
 
         }
@@ -419,11 +617,24 @@ namespace Execute
 
         static void Main(string[] args)
         {
-            XOR();
+            //MNISTBinaryNet();
+            MNIST();
+            //XOR();
             //BinaryNetXOR();
            
         }
 
+        public class Mnist
+        {
+            public double[] Data { get; set; }
+            public int Label { get; set; }
+
+            public Mnist(double[] data, int label)
+            {
+                Data = data;
+                Label = label;
+            }
+        }
 
 
         public struct Xor

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MachineSharpLibrary
 {
-    interface INet
+   public interface INet
     {
         //public facing methods
         double[] Predict(double[] Inputs);
@@ -16,7 +16,7 @@ namespace MachineSharpLibrary
     public abstract class INetBase : INet
     {
         protected abstract Activations ActivationsFunction { get; set; }
-        private double _LearningRate{get;set;}
+        private double _LearningRate { get; set; }
 
         protected double LearningRate
         {
@@ -41,22 +41,19 @@ namespace MachineSharpLibrary
             {
                 case (Activations.Sigmoid):
                     return (1 / (1 + Math.Exp(-ValueIn)));
-                    break;
 
                 case (Activations.DSigmoid):
                     return (ValueIn * (1 - ValueIn));
-                    break;
 
                 default:
                     throw new Exception("Invalid activation");
-                   
             }
 
         }
 
     }
-        public enum CostFunctions { }
-   
+    public enum CostFunctions { }
+
 
 
 }

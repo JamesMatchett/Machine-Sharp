@@ -18,6 +18,13 @@ namespace MachineSharpLibrary
             _sr = new StreamReader(_path);
         }
 
+        //Deconstructor to close streams and save memory
+        ~DataLoader()
+        {
+            _path = null;
+            _sr.Close();
+        }
+
         public List<Mnist> LoadNext(int NumberToLoad)
         {
             var TrainingList = new List<Mnist>();

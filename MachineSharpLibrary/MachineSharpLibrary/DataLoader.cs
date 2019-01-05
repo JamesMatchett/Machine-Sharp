@@ -11,11 +11,15 @@ namespace MachineSharpLibrary
     {
         private string _path { get; set; }
         private StreamReader _sr { get; set; }
+        private Mnist _internalNext {get;set;}
+        private Mnist _internalSecond { get; set; }
+        private Mnist _internalTemp { get; set; }
 
         public DataLoader(string path)
         {
             _path = path;
             _sr = new StreamReader(_path);
+            _internalNext = LoadNext(1);
         }
 
         //Deconstructor to close streams and save memory
@@ -25,11 +29,27 @@ namespace MachineSharpLibrary
             _sr.Close();
         }
 
-        public List<Mnist> LoadNext(int NumberToLoad)
+        public Mnist Next()
         {
-            var TrainingList = new List<Mnist>();
-            int i = 0;
+            _internalTemp = _internalNext;
+             BumpQueue();
+            return _internalTemp;
+        }
 
+       private void BumpQueue() 
+       {
+            Task.Run(() =>
+            {
+                _internalNext = _internalSecond;
+                _internalSecond = LoadNext(1);
+            }
+            );
+       }
+
+
+        private Mnist LoadNext(int NumberToLoad)
+        {
+            int i = 0;
             StringBuilder build = new StringBuilder();
             int index = -1;
             int label = 0;
@@ -52,12 +72,12 @@ namespace MachineSharpLibrary
 
                     if (index == (28 * 28) - 1)
                     {
-                        TrainingList.Add(new Mnist(data, label));
                         index = -1;
                         data = new double[28 * 28];
                         build.Clear();
                         _sr.Read();
                         _sr.Read();
+                        return (new Mnist(data, label));
                     }
 
                     build.Clear();
@@ -80,7 +100,9 @@ namespace MachineSharpLibrary
                 }
                 i++;
             }
-            return TrainingList;
+
+            //should only reach here when there is an eofstream exception
+            return null;
         }
     }
 }

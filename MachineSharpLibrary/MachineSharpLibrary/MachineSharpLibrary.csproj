@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="INet.cs" />
+    <Compile Include="DataLoader.cs"/>
     <Compile Include="LMMCNet.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="NeuralNetwork.cs" />

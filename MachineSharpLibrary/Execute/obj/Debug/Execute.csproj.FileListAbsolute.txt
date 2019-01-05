@@ -8,12 +8,22 @@
 /Users/jamesm@kainos.com/Desktop/Personal/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.csproj.CopyComplete
 /Users/jamesm@kainos.com/Desktop/Personal/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.exe
 /Users/jamesm@kainos.com/Desktop/Personal/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.pdb
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\bin\Debug\Execute.exe.config
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\bin\Debug\Execute.exe
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\bin\Debug\Execute.pdb
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\bin\Debug\MachineSharpLibrary.dll
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\bin\Debug\MachineSharpLibrary.pdb
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\obj\Debug\Execute.csprojResolveAssemblyReference.cache
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\obj\Debug\Execute.csproj.CoreCompileInputs.cache
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\obj\Debug\Execute.exe
-D:\Git\hecking jm\Machine-Sharp\MachineSharpLibrary\Execute\obj\Debug\Execute.pdb
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/Execute.exe.config
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/Execute.exe
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/Execute.pdb
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/MachineSharpLibrary.dll
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/MachineSharpLibrary.pdb
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.csprojResolveAssemblyReference.cache
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.csproj.CoreCompileInputs.cache
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.exe
+D:/Git/hecking jm/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.pdb
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/Execute.exe.config
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/Execute.exe
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/Execute.pdb
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/MachineSharpLibrary.dll
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/bin/Debug/MachineSharpLibrary.pdb
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.csprojAssemblyReference.cache
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.csproj.CoreCompileInputs.cache
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.csproj.CopyComplete
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.exe
+/Users/jamesm@kainos.com/Desktop/workingsmart/Machine-Sharp/MachineSharpLibrary/Execute/obj/Debug/Execute.pdb

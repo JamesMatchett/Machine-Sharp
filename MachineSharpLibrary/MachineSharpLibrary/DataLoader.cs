@@ -10,7 +10,7 @@ namespace MachineSharpLibrary
     class DataLoader
     {
         private string _path { get; set; }
-        private StreamReader _sr {get;set;}
+        private StreamReader _sr { get; set; }
 
         public DataLoader(string path)
         {
@@ -30,57 +30,57 @@ namespace MachineSharpLibrary
             var TrainingList = new List<Mnist>();
             int i = 0;
 
-                StringBuilder build = new StringBuilder();
-                int index = -1;
-                int label = 0;
-                double[] data = new double[28 * 28];
-                while (!_sr.EndOfStream && i < NumberToLoad)
+            StringBuilder build = new StringBuilder();
+            int index = -1;
+            int label = 0;
+            double[] data = new double[28 * 28];
+            while (!_sr.EndOfStream && i < NumberToLoad)
+            {
+                int next = _sr.Read() - 48;
+                if (next == -4)
                 {
-                    int next = _sr.Read() - 48;
-                    if (next == -4)
+                    if (index == -1)
                     {
-                        if (index == -1)
-                        {
-                            label = Convert.ToInt32(build);
-                            index++;
-                        }
-                        else
-                        {
-                            data[index] = Convert.ToInt32(build);
-                            index++;
-                        }
-
-                        if (index == (28 * 28) - 1)
-                        {
-                            TrainingList.Add(new Mnist(data, label));
-                            index = -1;
-                            data = new double[28 * 28];
-                            build.Clear();
-                            _sr.Read();
-                            _sr.Read();
-                        }
-
-                    build.Clear();
+                        label = Convert.ToInt32(build);
+                        index++;
                     }
                     else
                     {
+                        data[index] = Convert.ToInt32(build);
+                        index++;
+                    }
+
+                    if (index == (28 * 28) - 1)
+                    {
+                        TrainingList.Add(new Mnist(data, label));
+                        index = -1;
+                        data = new double[28 * 28];
+                        build.Clear();
+                        _sr.Read();
+                        _sr.Read();
+                    }
+
+                    build.Clear();
+                }
+                else
+                {
                     //check for line breaks & spaces
                     string testString = build.ToString();
-                        if (testString.Contains(@"\"))
-                        {
-                            build = build.Clear();
-                            build.Append(testString.Remove(testString.IndexOf(@"\")));
-                        }
-                        if (testString.Contains(@"n"))
-                        {
-                            build.Clear();
-                            build.Append(testString.Remove(testString.IndexOf(@"n")));
-                        }
-                        build.Append(next);
+                    if (testString.Contains(@"\"))
+                    {
+                        build = build.Clear();
+                        build.Append(testString.Remove(testString.IndexOf(@"\")));
                     }
+                    if (testString.Contains(@"n"))
+                    {
+                        build.Clear();
+                        build.Append(testString.Remove(testString.IndexOf(@"n")));
+                    }
+                    build.Append(next);
+                }
                 i++;
             }
             return TrainingList;
-            }
         }
+    }
 }
